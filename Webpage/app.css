@@ -1,0 +1,22 @@
+body {
+    width: 100vw;
+}
+
+.pixel-grid-container {
+    max-width: 100%;
+}
+
+.pixel-grid-container .pixel-row {
+    flex: auto;
+    flex-wrap: nowrap;
+    padding: 0;
+}
+
+.pixel-grid-container .pixel-row .pixel-box {
+    width: fit-content;
+    padding: 0;
+}
+
+.pixel-grid-container .pixel-row .pixel-box .pixel-input {
+    width: 100%;
+}
