@@ -30,30 +30,9 @@ HEIGHT = 600
 ## ADDED FUNCTIONS ##
 #####################
 
-#   This function just prints a ASCII trophy image and a message when the user wins
-#       - runs when the user wins the game (solves the door puzzle)
-
-
-def win():
-    print(
-        """
-             ___________
-            '._==_==_=_.'
-            .-\:      /-.
-           | (|:.     |) |
-            '-|:.     |-'
-              \::.    /
-               '::. .'
-                 ) (
-               _.' '._
-              `-------`
-
-        Congratz! You made it out!
-        """
-    )
-
-
 # the blueprint for a room
+
+
 class Room:
     # the constructor
     def __init__(self, name):
@@ -181,17 +160,11 @@ class Game(Frame):
     def __init__(self, parent):
         # call the constructor in the superclass
         Frame.__init__(self, parent)
+        self.doorPuzzle = DoorPuzzle()
 
     # Plays the game
 
     def play(self):
-        # play forever (well, at least until the player dies or asks to quit)
-        # Set the passphrase for the puzzle
-        self.passphrase = "Puzzle Passphrase"
-        # Encodes the given phrase for the puzzle and stores it
-        self.encodedPhrase = self.encode()
-        # Keeps track of how many times the user accessed the door function
-        self.doorAttempts = 0
         # add the rooms to the game
         self.createRooms()
         # nothing in inventory...yet
@@ -200,39 +173,6 @@ class Game(Frame):
         self.inventoryDesc = []
         # configure the GUI
         self.setupGUI()
-
-    def encode(self):
-        #       - It does this by taking a list of all alphabetic characters, one for upper case, one for lower case
-        #           and shifts it by a random amount with a possible range of [3,7] shifted characters, then converts
-        #           the characters to a string.
-        #           - To account for wrapping around from z to a in the alphabetic lists, uses the mod operator
-        #               in order to find how many letters it needs to shift after wrapping around to a in the list
-        #       - I also added future proofing to be able to randomize which cipher is used if more possible ciphers
-        #           are added, such as the ones listed in the "book" item in one of the rooms. Any cipher used is to be
-        #           added to the description of the "book" item.
-        encoding = 'caesar'
-
-        if (encoding == 'caesar'):
-            inpt = self.passphrase
-            alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-            alphabetl = "abcdefghijklmnopqrstuvwxyz"
-
-            for i in range(0, randint(3, 7)):
-                output = [0 for i in range(len(inpt))]
-                for j in range(0, len(inpt)):
-                    for k in range(0, 26):
-                        if (inpt[j] == alphabet[k]):
-                            output[j] = alphabet[(k+i) % len(alphabet)]
-                        elif (inpt[j] == alphabetl[k]):
-                            output[j] = alphabetl[(k+i) % len(alphabet)]
-                        elif inpt[j] == "'" or inpt[j] == ",":
-                            output[j] = inpt[j]
-                        elif inpt[j] == " ":
-                            output[j] = inpt[j]
-                s = ""
-                for spot in output:
-                    s += str(spot)
-        return s
 
     # Creates the rooms
     def createRooms(self):
@@ -322,15 +262,6 @@ class Game(Frame):
         self.player_input.pack(side=BOTTOM, fill=X)
         self.player_input.focus()
 
-        # setup the image to the left of the GUI
-        # the widget is a Tkinter Label
-        # don't let the image control the widget's size
-        img = None
-        self.image = Label(self, width=WIDTH // 2, image=img)
-        self.image.image = img
-        self.image.pack(side=LEFT, fill=Y)
-        self.image.pack_propagate(False)
-
         # setup the text to the right of the GUI
         # first, the frame in which the text will be placed
         self.text_frame = Frame(self, width=WIDTH // 2)
@@ -342,15 +273,24 @@ class Game(Frame):
         self.text_frame.pack(side=RIGHT, fill=Y)
         self.text_frame.pack_propagate(False)
 
+        # setup the image to the left of the GUI
+        # the widget is a Tkinter Label
+        # don't let the image control the widget's size
+        img = None
+        self.image = Label(self, width=WIDTH // 2, image=img)
+        self.image.image = img
+        self.image.pack(side=LEFT, fill=Y)
+        self.image.pack_propagate(False)
+
+        self.updateStatus()
+
     # sets the current room image
+
     def setRoomImage(self):
         pass
 
     # sets the status displayed on the right of the GUI
-    def updateStatus(self, response):
-        # set the status so the player has situational awareness
-        # the status has room and inventory information
-        self.status = f"{self.currentRoom}\nYou are carrying: {self.inventory}\n"
+    def updateStatus(self, response=""):
         # display the status
         self.text.config(state=NORMAL)
         self.text.delete("1.0", END)
@@ -358,7 +298,21 @@ class Game(Frame):
             # if dead, let the player know
             self.text.insert(
                 END, "You are dead. The only thing you can do now is quit.\n")
+            # Display winning image
+            while (True):
+                pass
+        elif (self.currentRoom.name == "Outside"):
+            # if player won, let the player know
+            self.player_input.config(status="disabled")
+            self.text.insert(
+                END, "Congrataz! You won!\n")
+            # Display winning image
+            while (True):
+                pass
         else:
+            # set the status so the player has situational awareness
+            # the status has room and inventory information
+            self.status = f"{self.currentRoom}\nYou are carrying: {self.inventory}\n"
             # otherwise, display the appropriate status
             self.text.insert(END, str(f"{self.status}\n\n{response}"))
 
@@ -375,7 +329,7 @@ class Game(Frame):
         # set the user's input to lowercase to make it easier to compare
         # the verb and noun to known values
         action = self.player_input.get().lower()
-        # exit the game if the player wants to leave (supports quit,
+        # exit the program if the player wants to leave (supports quit,
         # exit, and bye)
         if (action == "quit" or action == "exit" or action == "bye"):
             exit()
@@ -392,14 +346,14 @@ class Game(Frame):
                 # set a default response
                 response = "Invalid exit."
                 # check for valid exits in the current room
-
                 for i in range(len(self.currentRoom.exits)):
                     # a valid exit is found
                     if (noun == self.currentRoom.exits[i]):
                         # If the exit called is door and the user hasn't solved the puzzle, don't change the room.
                         # This also calls the door() function for the puzzle to be attempted.
-                        if (self.currentRoom.exits[i] == 'door' and self.doorPuzzle() == False):
-                            break
+                        if (self.currentRoom.exits[i] == 'door'):
+                            self.doorPuzzle.gameObj = self
+                            self.doorPuzzle.play()
                         # change the current room to the one that is
                         # associated with the specified exit
                         self.currentRoom = self.currentRoom.exitLocations[i]
@@ -463,71 +417,97 @@ class Game(Frame):
         else:
             # Improper command
             response = "I don't understand.  Try verb noun.  Valid verbs are go, look, and take"
-        # display the response=
+        # display the response. Clears input box
+        self.player_input.delete(first=0, last=END)
         self.updateStatus(response)
 
-    #   This funciton creates the door puzzle where the cipher is implemented.
-    #   - The user is told a phrase and is instructed to decipher the phrase. They'll be able to find
-    #       a list of ciphers in the "book" item in Room 3
-    #   - The door gives different responses based on success and how many times the user has accessed
-    #       the door to decrease annoyance with the puzzle
-    #   - I got this idea from a D&D puzzle for my campaign I created with similar attributes
-    #   - If the user puts in the correct deciphered phrase, the function returns True, otherwise False
-    #       - This tells the "go" verb if-then statement whether the user succeeded or not
-    def doorPuzzle(self):
+
+class DoorPuzzle():
+    def __init__(self):
+        # Set the passphrase for the puzzle
+        self.passphrase = "Puzzle Passphrase"
+        # Encodes the given phrase for the puzzle and stores it
+        self.encodedPhrase = self.encode()
+        # Keeps track of how many times the user accessed the door function
+        self.doorAttempts = 0
+        self.doorSuccess = False
+
+    def encode(self):
+        #       - It does this by taking a list of all alphabetic characters, one for upper case, one for lower case
+        #           and shifts it by a random amount with a possible range of [3,7] shifted characters, then converts
+        #           the characters to a string.
+        #           - To account for wrapping around from z to a in the alphabetic lists, uses the mod operator
+        #               in order to find how many letters it needs to shift after wrapping around to a in the list
+        #       - I also added future proofing to be able to randomize which cipher is used if more possible ciphers
+        #           are added, such as the ones listed in the "book" item in one of the rooms. Any cipher used is to be
+        #           added to the description of the "book" item.
+        encoding = 'caesar'
+        if (encoding == 'caesar'):
+            inpt = self.passphrase
+            alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            alphabetl = "abcdefghijklmnopqrstuvwxyz"
+
+            for i in range(0, randint(3, 7)):
+                output = [0 for i in range(len(inpt))]
+                for j in range(0, len(inpt)):
+                    for k in range(0, 26):
+                        if (inpt[j] == alphabet[k]):
+                            output[j] = alphabet[(k+i) % len(alphabet)]
+                        elif (inpt[j] == alphabetl[k]):
+                            output[j] = alphabetl[(k+i) % len(alphabet)]
+                        elif inpt[j] == "'" or inpt[j] == ",":
+                            output[j] = inpt[j]
+                        elif inpt[j] == " ":
+                            output[j] = inpt[j]
+                s = ""
+                for spot in output:
+                    s += str(spot)
+        return s
+
+    #   This funciton starts the door puzzle where the cipher is implemented.
+    def play(self):
+        #   - The user is told a phrase and is instructed to decipher the phrase. They'll be able to find
+        #       a list of ciphers in the "book" item in Room 3
+        #   - The door gives different responses based on success and how many times the user has accessed
+        #       the door to decrease annoyance with the puzzle
+        #   - I got this idea from a D&D puzzle for my campaign I created with similar attributes
+        #   - If the user puts in the correct deciphered phrase, the function returns True, otherwise False
+        #       - This tells the "go" verb if-then statement whether the user succeeded or not
+        self.gameObj.player_input.bind("<Return>", self.processInput)
+        self.gameObj.text.config(state=NORMAL)
+        self.gameObj.text.delete("1.0", END)
         if (self.doorAttempts == 0):
-            print(
-                f"The Door speaks,\n'Don't be brash, solve my puzzle in order to pass. Decipher this phrase.\n{self.encodedPhrase}")
+            self.gameObj.text.insert(END, str(
+                f"The Door speaks,\n'Don't be brash, solve my puzzle in order to pass.'\nDecipher this phrase.\n{self.encodedPhrase}"))
         else:
-            print(f"Decipher this phrase.\n{self.encodedPhrase}")
-        inpt = input()
-        if (inpt == self.passphrase):
-            return True
+            self.gameObj.text.insert(
+                END, str(f"Decipher this phrase.\n{self.encodedPhrase}"))
+
+        # Wait's until return key is pressed, then calls on DoorPuzzle.processInput()
+        input()
+
+    def processInput(self, event):
+        if (self.gameObj.player_input.bind() == self.passphrase):
+            self.doorSuccess = True
         else:
             if (self.doorAttempts < 3):
-                print(
-                    "\nThe Door speaks, 'Invalid. Come back and try again. There might be a clue somewhere.'")
+                self.gameObj.text.insert(END, str(
+                    "\nThe Door speaks, 'Invalid. Come back and try again. There might be a clue somewhere.'"))
             else:
-                print(
-                    "\nThe Door speaks, 'Invalid. You might wanna look for clues in Room 3'")
-            input("\nPress any key to continue.")
-            return False
+                self.gameObj.text.insert(END, str(
+                    f"\nThe Door speaks, 'Invalid. You might wanna look for clues in {self.r3.name}'"))
+            self.doorAttempts += 1
+            self.doorSuccess = False
+        # Update variables and return to the main game
+        self.returnToGame()
 
-    # REPLACE ASCII PRINT OUT WITH IMG
-    def death(self):
-        # Displays message and ASCII image when the player dies.\
-        # Lack of indenting made the skull image more intelligable and digestable when programming and running the game.
-        print(
-            """
-                 uuuuuuu
-             uu$$$$$$$$$$$uu
-          uu$$$$$$$$$$$$$$$$$uu
-         u$$$$$$$$$$$$$$$$$$$$$u
-        u$$$$$$$$$$$$$$$$$$$$$$$u
-       u$$$$$$$$$$$$$$$$$$$$$$$$$u
-       u$$$$$$$$$$$$$$$$$$$$$$$$$u
-       u$$$$$$'   '$$$'   '$$$$$$u
-       '$$$$'      u$u       $$$$'
-        $$$u       u$u       u$$$
-        $$$u      u$$$u      u$$$
-         '$$$$uu$$$   $$$uu$$$$'
-          '$$$$$$$'   '$$$$$$$'
-            u$$$$$$$u$$$$$$$u
-             u$'$'$'$'$'$'$u
-  uuu        $$u$ $ $ $ $u$$       uuu
- u$$$$        $$$$$u$u$u$$$       u$$$$
-  $$$$$uu      '$$$$$$$$$'     uu$$$$$$
-u$$$$$$$$$$$uu    '''''    uuuu$$$$$$$$$$
-$$$$'''$$$$$$$$$$uuu   uu$$$$$$$$$'''$$$'
- '''      ''$$$$$$$$$$$uu ''$'''
-           uuuu ''$$$$$$$$$$uuu
-  u$$$uuu$$$$$$$$$uu ''$$$$$$$$$$$uuu$$$
-  $$$$$$$$$$''''           ''$$$$$$$$$$$'
-   '$$$$$'                      ''$$$$''
-     $$$'                         $$$$'
-        """
-        )
-        print("\n\nYou jumped out of a window, for some reason, and died. . . .")
+    def returnToGame(self):
+        self.gameObj.player_input.bind("<Return>", self.gameObj.processInput)
+        if self.doorSuccess == True:
+            # Change the current room to outisde
+            self.gameObj.currentRoom = self.gameObj.r5
+        else:
+            g.updateStatus(response="The door did not open.")
 
 
 ##########################################################
