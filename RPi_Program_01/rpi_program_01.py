@@ -21,7 +21,10 @@
 ######################################################################
 ######################################################################
 from random import randint
-from tkinter import Frame, Tk
+from tkinter import *
+# the default size of the GUI is 800x600
+WIDTH = 800
+HEIGHT = 600
 
 #####################
 ## ADDED FUNCTIONS ##
@@ -178,6 +181,11 @@ class Game(Frame):
     def __init__(self, parent):
         # call the constructor in the superclass
         Frame.__init__(self, parent)
+
+    # Plays the game
+
+    def play(self):
+        # play forever (well, at least until the player dies or asks to quit)
         # Set the passphrase for the puzzle
         self.passphrase = "Puzzle Passphrase"
         # Encodes the given phrase for the puzzle and stores it
@@ -193,35 +201,15 @@ class Game(Frame):
         # configure the GUI
         self.setupGUI()
 
-    # Plays the game
-    def play(self):
-        # play forever (well, at least until the player dies or asks to quit)
-        while (True):
-            # If the current room is None (and the player is dead), exit the
-            #   game
-            if (self.currentRoom == None):
-                self.death()
-                exit()
-            # If the current room is "Outside", you've won. Exit the game
-            if (self.currentRoom.name == "Outside"):
-                win()
-                exit()
-            # Prints the current status
-            self.printStatus()
-            # Processes player input
-            self.processInput()
-
-    #   This function takes the door's puzzling phrase and creates a caesar cipher of a random character
-    #       shift amount, then returns the value of the encoded phrase as a string.
-    #       - It does this by taking a list of all alphabetic characters, one for upper case, one for lower case
-    #           and shifts it by a random amount with a possible range of [3,7] shifted characters, then converts
-    #           the characters to a string.
-    #           - To account for wrapping around from z to a in the alphabetic lists, uses the mod operator
-    #               in order to find how many letters it needs to shift after wrapping around to a in the list
-    #       - I also added future proofing to be able to randomize which cipher is used if more possible ciphers
-    #           are added, such as the ones listed in the "book" item in one of the rooms. Any cipher used is to be
-    #           added to the description of the "book" item.
     def encode(self):
+        #       - It does this by taking a list of all alphabetic characters, one for upper case, one for lower case
+        #           and shifts it by a random amount with a possible range of [3,7] shifted characters, then converts
+        #           the characters to a string.
+        #           - To account for wrapping around from z to a in the alphabetic lists, uses the mod operator
+        #               in order to find how many letters it needs to shift after wrapping around to a in the list
+        #       - I also added future proofing to be able to randomize which cipher is used if more possible ciphers
+        #           are added, such as the ones listed in the "book" item in one of the rooms. Any cipher used is to be
+        #           added to the description of the "book" item.
         encoding = 'caesar'
 
         if (encoding == 'caesar'):
@@ -235,12 +223,8 @@ class Game(Frame):
                     for k in range(0, 26):
                         if (inpt[j] == alphabet[k]):
                             output[j] = alphabet[(k+i) % len(alphabet)]
-                            if (inpt[j] == "Z"):
-                                print(f"{output[j]}, {(k+i) % len(alphabet)}")
                         elif (inpt[j] == alphabetl[k]):
                             output[j] = alphabetl[(k+i) % len(alphabet)]
-                            if (inpt[j] == "z"):
-                                print(f"{output[j]}, {(k+i) % len(alphabet)}")
                         elif inpt[j] == "'" or inpt[j] == ",":
                             output[j] = inpt[j]
                         elif inpt[j] == " ":
@@ -324,36 +308,80 @@ class Game(Frame):
 
     # sets up the GUI
     def setupGUI(self):
-        pass
+        # Organize the GUI.
+        self.pack(fill=BOTH, expand=1)
+
+        # The widget is a Tkinter Entry.
+        # set its background to white and bind the return key to the
+        # function process in the class
+        # push it to the bottom of the GUI and let it fill
+        # horizontally
+        # give it focus so the player doesn't have to click on it
+        self.player_input = Entry(self, bg="white")
+        self.player_input.bind("<Return>", self.processInput)
+        self.player_input.pack(side=BOTTOM, fill=X)
+        self.player_input.focus()
+
+        # setup the image to the left of the GUI
+        # the widget is a Tkinter Label
+        # don't let the image control the widget's size
+        img = None
+        self.image = Label(self, width=WIDTH // 2, image=img)
+        self.image.image = img
+        self.image.pack(side=LEFT, fill=Y)
+        self.image.pack_propagate(False)
+
+        # setup the text to the right of the GUI
+        # first, the frame in which the text will be placed
+        self.text_frame = Frame(self, width=WIDTH // 2)
+        # the widget is a Tkinter Text
+        # disable it by default
+        # don't let the widget control the frame's size
+        self.text = Text(self.text_frame, bg="lightgrey", state=DISABLED)
+        self.text.pack(fill=Y, expand=1)
+        self.text_frame.pack(side=RIGHT, fill=Y)
+        self.text_frame.pack_propagate(False)
 
     # sets the current room image
     def setRoomImage(self):
         pass
 
     # sets the status displayed on the right of the GUI
-    def printStatus(self):
+    def updateStatus(self, response):
         # set the status so the player has situational awareness
         # the status has room and inventory information
         self.status = f"{self.currentRoom}\nYou are carrying: {self.inventory}\n"
         # display the status
+        self.text.config(state=NORMAL)
+        self.text.delete("1.0", END)
+        if (self.currentRoom == None):
+            # if dead, let the player know
+            self.text.insert(
+                END, "You are dead. The only thing you can do now is quit.\n")
+        else:
+            # otherwise, display the appropriate status
+            self.text.insert(END, str(f"{self.status}\n\n{response}"))
+
+        self.text.config(state=DISABLED)
+
         print("========================================================")
         print(self.status)
 
-    def processInput(self):
+    def processInput(self, event):
         # prompt for player input
         # the game supports a simple language of <verb> <noun>
         # valid verbs are go, look, and take
         # valid nouns depend on the verb
-        action = input("What to do? ")
         # set the user's input to lowercase to make it easier to compare
         # the verb and noun to known values
-        action = action.lower()
+        action = self.player_input.get().lower()
         # exit the game if the player wants to leave (supports quit,
         # exit, and bye)
         if (action == "quit" or action == "exit" or action == "bye"):
             exit()
         # split the user input into words (words are separated by spaces)
         words = action.split()
+        response = ""
         # the game only understands two word inputs
         if (len(words) == 2):
             # isolate the verb and noun
@@ -435,8 +463,8 @@ class Game(Frame):
         else:
             # Improper command
             response = "I don't understand.  Try verb noun.  Valid verbs are go, look, and take"
-        # display the response
-        print("\n{}".format(response))
+        # display the response=
+        self.updateStatus(response)
 
     #   This funciton creates the door puzzle where the cipher is implemented.
     #   - The user is told a phrase and is instructed to decipher the phrase. They'll be able to find
@@ -519,3 +547,5 @@ window.protocol("WM_DELETE_WINDOW", lambda: exit())
 g = Game(window)
 # play the game
 g.play()
+
+window.mainloop()
