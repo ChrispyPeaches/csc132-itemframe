@@ -296,19 +296,20 @@ class Game(Frame):
         self.text.delete("1.0", END)
         if (self.currentRoom == None):
             # if dead, let the player know
+            self.player_input.config(state=DISABLED)
             self.text.insert(
                 END, "You are dead. The only thing you can do now is quit.\n")
-            # Display winning image
-            while (True):
-                pass
+            ###################### Insert command to display loosing image #####################
+            # Use input to pause program without breaking functionaltiy
+            input()
         elif (self.currentRoom.name == "Outside"):
             # if player won, let the player know
-            self.player_input.config(status="disabled")
+            self.player_input.config(state=DISABLED)
             self.text.insert(
                 END, "Congrataz! You won!\n")
-            # Display winning image
-            while (True):
-                pass
+            ###################### Insert command to display winning image #####################
+            # Use input to pause program without breaking functionaltiy
+            input()
         else:
             # set the status so the player has situational awareness
             # the status has room and inventory information
@@ -317,9 +318,6 @@ class Game(Frame):
             self.text.insert(END, str(f"{self.status}\n\n{response}"))
 
         self.text.config(state=DISABLED)
-
-        print("========================================================")
-        print(self.status)
 
     def processInput(self, event):
         # prompt for player input
@@ -414,6 +412,8 @@ class Game(Frame):
                         response = "Item grabbed."
                         # no need to check any more grabbable items
                         break
+            else:
+                response = "I don't understand. Try verb noun.  Valid verbs are go, look, and take"
         else:
             # Improper command
             response = "I don't understand.  Try verb noun.  Valid verbs are go, look, and take"
@@ -474,6 +474,7 @@ class DoorPuzzle():
         #   - If the user puts in the correct deciphered phrase, the function returns True, otherwise False
         #       - This tells the "go" verb if-then statement whether the user succeeded or not
         self.gameObj.player_input.bind("<Return>", self.processInput)
+        self.gameObj.player_input.delete(first=0, last=END)
         self.gameObj.text.config(state=NORMAL)
         self.gameObj.text.delete("1.0", END)
         if (self.doorAttempts == 0):
@@ -481,33 +482,35 @@ class DoorPuzzle():
                 f"The Door speaks,\n'Don't be brash, solve my puzzle in order to pass.'\nDecipher this phrase.\n{self.encodedPhrase}"))
         else:
             self.gameObj.text.insert(
-                END, str(f"Decipher this phrase.\n{self.encodedPhrase}"))
+                END, str(f"The Door speaks,\nDecipher this phrase.\n{self.encodedPhrase}"))
 
+        self.gameObj.text.config(state=DISABLED)
         # Wait's until return key is pressed, then calls on DoorPuzzle.processInput()
         input()
 
     def processInput(self, event):
-        if (self.gameObj.player_input.bind() == self.passphrase):
+        response = ""
+        if (self.gameObj.player_input.get() == self.passphrase):
             self.doorSuccess = True
         else:
             if (self.doorAttempts < 3):
-                self.gameObj.text.insert(END, str(
-                    "\nThe Door speaks, 'Invalid. Come back and try again. There might be a clue somewhere.'"))
+                response = "\nThe Door speaks,\n'Invalid. Come back and try again. There might be a clue somewhere...'"
             else:
-                self.gameObj.text.insert(END, str(
-                    f"\nThe Door speaks, 'Invalid. You might wanna look for clues in {self.r3.name}'"))
+                response = f"\nThe Door speaks,\n'Invalid. You might wanna look for clues in {self.r3.name}'"
+
             self.doorAttempts += 1
             self.doorSuccess = False
+        self.gameObj.text.config(state=DISABLED)
         # Update variables and return to the main game
-        self.returnToGame()
+        self.returnToGame(response)
 
-    def returnToGame(self):
+    def returnToGame(self, response=""):
         self.gameObj.player_input.bind("<Return>", self.gameObj.processInput)
+        self.gameObj.player_input.delete(first=0, last=END)
         if self.doorSuccess == True:
-            # Change the current room to outisde
+            # Change the current room to outide
             self.gameObj.currentRoom = self.gameObj.r5
-        else:
-            g.updateStatus(response="The door did not open.")
+        g.updateStatus(response)
 
 
 ##########################################################
