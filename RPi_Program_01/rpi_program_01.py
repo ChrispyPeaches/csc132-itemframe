@@ -215,6 +215,8 @@ class Game(Frame):
         self.r2.addItem(
             "rug", "It is nice and Indian. It also needs to be vacuumed.")
         self.r2.addItem("fireplace", "It is full of ashes.")
+        self.r2.addItem("dog", "It looks back at you, perhaps inviting you to pet it?")
+
 
         ############
         ## ROOM 3 ##
@@ -412,11 +414,31 @@ class Game(Frame):
                         response = "Item grabbed."
                         # no need to check any more grabbable items
                         break
+
+            # the verb is: pet          
+            elif verb == "pet":
+                response = "you can't pet that."
+
+                if "dog" in self.currentRoom.items:
+                    response = "You reach out to pet the dog, it leaps forward and bites you. Before you can do anything it flees out of the room."
+                    self.currentRoom.items.remove("dog")
+
+
+            # the verb is drink
+            elif verb == "drink":
+                response = "you can't drink that."
+                
+                if "6-pack" in self.inventory:                  # added drinking the brew, it kills you 
+                    response = "You drink the brew, it smells funny. You pass out for mysterious reasons and dont awaken."
+
+                    self.currentRoom = None
+                     
+
             else:
-                response = "I don't understand. Try verb noun.  Valid verbs are go, look, and take"
+                response = "I don't understand. Try verb noun.  Valid verbs are go, look, drink, pet, and take"
         else:
             # Improper command
-            response = "I don't understand.  Try verb noun.  Valid verbs are go, look, and take"
+            response = "I don't understand.  Try verb noun.  Valid verbs are go, look, drink, pet, and take"
         # display the response. Clears input box
         self.player_input.delete(first=0, last=END)
         self.updateStatus(response)
