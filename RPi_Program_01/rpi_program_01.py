@@ -21,6 +21,7 @@
 ######################################################################
 ######################################################################
 from random import randint
+import random
 from tkinter import *
 # the default size of the GUI is 800x600
 WIDTH = 800
@@ -247,6 +248,25 @@ class Game(Frame):
             "brew_rig", "Gourd is brewing some sort of oatmeal stout on the brew rig. A 6-pack is resting beside it.")
         # set room 1 as the current room at the beginning of the game
         self.currentRoom = self.r1
+    def game(self):
+        num = random.randint(1, 10)
+        attempt = 4
+        msg = 'You Lost Now Die'
+        while attempt > 0:
+            user_input = int(input('Enter Number: '))
+            if user_input == num:
+                self.currentRoom = self.r5
+            elif user_input > num:
+                print(f'{user_input} is greater.\nRemaining attempts: {attempt}.')
+                attempt -= 1
+            elif user_input < num:
+                print(f'{user_input} is smaller.\nRemaining attempts: {attempt}.')
+                attempt -= 1
+            else:
+                print("Thats not a number stupid human")
+        self.currentRoom = None
+
+
 
     # sets up the GUI
     def setupGUI(self):
@@ -297,6 +317,7 @@ class Game(Frame):
         self.text.config(state=NORMAL)
         self.text.delete("1.0", END)
         if (self.currentRoom == None):
+            self.game()
             # if dead, let the player know
             self.player_input.config(state=DISABLED)
             self.text.insert(
