@@ -479,7 +479,6 @@ class Game(Frame):
                 if "6-pack" in self.inventory:                  # added drinking the brew, it kills you
                     response = "You drink the brew, it smells funny. You pass out for mysterious reasons and dont awaken."
                     self.currentRoom = self.r6
-
             else:
                 response = "I don't understand. Try verb noun.  Valid verbs are go, look, drink, pet, and take"
         else:
