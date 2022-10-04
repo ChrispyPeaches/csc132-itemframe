@@ -21,6 +21,7 @@
 ######################################################################
 ######################################################################
 from random import randint
+from time import sleep
 import random
 from tkinter import *
 # the default size of the GUI is 800x600
@@ -162,6 +163,8 @@ class Game(Frame):
         # call the constructor in the superclass
         Frame.__init__(self, parent)
         self.doorPuzzle = DoorPuzzle()
+        
+        self.attempt = 4
 
     # Plays the game
 
@@ -189,6 +192,9 @@ class Game(Frame):
         self.r4 = Room("Room 4")
         # Adds a room named "outside" listed as self.r5.
         self.r5 = Room("Outside")
+        self.r6 = Room("Battle")
+        self.r7 = Room("Death")
+        
 
         ############
         ## ROOM 1 ##
@@ -239,7 +245,7 @@ class Game(Frame):
         # add exits to room 4
         self.r4.addExit("north", self.r2)
         self.r4.addExit("west", self.r3)
-        self.r4.addExit("south", None)  # DEATH!
+        self.r4.addExit("south", self.r6)  # DEATH!
         # add grabbables to room 4
         self.r4.addGrabbable(
             "6-pack", "It read's the brand 'Jrbiibo'p'. You recognize the graphics to be the 'Mueller's' Brand")
@@ -248,28 +254,47 @@ class Game(Frame):
             "brew_rig", "Gourd is brewing some sort of oatmeal stout on the brew rig. A 6-pack is resting beside it.")
         # set room 1 as the current room at the beginning of the game
         self.currentRoom = self.r1
-    def game(self):
-        
+        ################
+        # Room 6 #####
+        ###########
+    def battle(self):
+        self.player_input.bind("<Return>", self.battleProcessInput)
+        self.player_input.delete(first=0, last=END)
         self.text.config(state=NORMAL)
-        num = str(random.randint(1, 10))
-        attempt = 4
-        self.text.insert(END,"You get a second chance.\n")
-        self.text.insert(END,('Enter Number: \n'))
-        while attempt > 0:
-            user_input = self.player_input.get()
-            if (user_input == num):
-                self.text.insert(END,"You Won")
-                self.currentRoom = self.r5
-                break
-            elif user_input > num:
-                self.text.insert(END,f'{user_input} is greater.\nRemaining attempts: {attempt}.\n')
-                attempt -= 1
-            elif user_input < num:
-                self.text.insert(END,f'{user_input} is smaller.\nRemaining attempts: {attempt}.\n')
-                attempt -= 1
+        self.generatednum = random.randint(1, 10)# change vak to 10
+
+        self.text.insert(END,"You jumped out of a window\n")
+        self.text.insert(END,"You get a second chance at life.\n")
+        self.text.insert(END,("Enter Number: \n"))
+        input()
         
-
-
+    def battleProcessInput(self,event):
+        self.text.config(state=NORMAL)
+        self.text.delete("1.0", END)
+        user_input = int(self.player_input.get())
+        self.player_input.delete(first=0,last=END)
+        if self.attempt > 0:
+            if (user_input == self.generatednum):
+                self.currentRoom = self.r5
+            elif user_input > self.generatednum:
+                #sleep(5000)
+                self.text.insert(END,f"{user_input} is greater.\nRemaining attempts: {self.attempt - 1}.\n")
+                self.attempt -= 1
+            elif user_input < self.generatednum:
+                #sleep(5000)
+                self.text.insert(END,f"{user_input} is smaller.\nRemaining attempts: {self.attempt - 1}.\n")
+                self.attempt -= 1
+        if(self.currentRoom == self.r5):
+            self.updateStatus()
+        else:
+            self.text.insert(END,"Try AGAIN\n")
+        if (self.attempt > 2):
+            self.currentRoom == self.r7
+            self.updateStatus()
+        self.text.config(state=DISABLED)
+        input()
+        
+        
 
     # sets up the GUI
     def setupGUI(self):
@@ -319,11 +344,13 @@ class Game(Frame):
         # display the status
         self.text.config(state=NORMAL)
         self.text.delete("1.0", END)
-        if (self.currentRoom == None):
-            self.game()
+        if (self.currentRoom.name == "Battle"):
+            self.battle()
+        elif (self.currentRoom == "Death"):
             # if dead, let the player know
+            self.player_input.config(state=DISABLED)
             self.text.insert(
-                END, "You are dead.\n")
+                END, "You are dead. The only thing you can do now is quit.\n")
             ###################### Insert command to display loosing image #####################
             # Use input to pause program without breaking functionaltiy
             input()
@@ -453,8 +480,7 @@ class Game(Frame):
                 
                 if "6-pack" in self.inventory:                  # added drinking the brew, it kills you 
                     response = "You drink the brew, it smells funny. You pass out for mysterious reasons and dont awaken."
-
-                    self.currentRoom = None
+                    self.currentRoom = self.r6
                      
 
             else:
@@ -557,7 +583,6 @@ class DoorPuzzle():
             self.gameObj.currentRoom = self.gameObj.r5
         g.updateStatus(response)
 
-
 ##########################################################
 # START THE GAME!!!
 ##########################################################
@@ -572,8 +597,8 @@ window.geometry(f"{WIDTH}x{HEIGHT}")
 window.protocol("WM_DELETE_WINDOW", lambda: exit())
 
 # create the GUI as a Tkinter canvas inside the window
-g = Game(window)
+Game(window).play()
 # play the game
-g.play()
+
 
 window.mainloop()
