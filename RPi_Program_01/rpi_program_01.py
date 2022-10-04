@@ -249,13 +249,14 @@ class Game(Frame):
         # set room 1 as the current room at the beginning of the game
         self.currentRoom = self.r1
     def game(self):
-        user_input = self.player_input.get()
+        
         self.text.config(state=NORMAL)
         num = str(random.randint(1, 10))
         attempt = 4
         self.text.insert(END,"You get a second chance.\n")
         self.text.insert(END,('Enter Number: \n'))
         while attempt > 0:
+            user_input = self.player_input.get()
             if (user_input == num):
                 self.text.insert(END,"You Won")
                 self.currentRoom = self.r5
@@ -266,8 +267,6 @@ class Game(Frame):
             elif user_input < num:
                 self.text.insert(END,f'{user_input} is smaller.\nRemaining attempts: {attempt}.\n')
                 attempt -= 1
-            else:
-                print("Thats not a number stupid human")
         
 
 
