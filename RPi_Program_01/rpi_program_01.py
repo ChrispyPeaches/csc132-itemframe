@@ -275,23 +275,22 @@ class Game(Frame):
             if (user_input == self.generatednum):
                 self.currentRoom = self.r5
             elif user_input > self.generatednum:
-                # sleep(5000)
+                self.attempt -= 1
                 self.text.insert(
                     END, f"{user_input} is greater.\nRemaining attempts: {self.attempt}.\n")
-                self.attempt -= 1
             elif user_input < self.generatednum:
-                # sleep(5000)
+                self.attempt -= 1
                 self.text.insert(
                     END, f"{user_input} is smaller.\nRemaining attempts: {self.attempt}.\n")
-                self.attempt -= 1
+
+        self.text.config(state=DISABLED)
         if (self.currentRoom == self.r5):
             self.updateStatus()
         else:
             self.text.insert(END, "Try AGAIN\n")
-        if (self.attempt < 1):
+        if (self.attempt == 0):
             self.currentRoom = self.r7
             self.updateStatus()
-        self.text.config(state=DISABLED)
         input()
 
     # sets up the GUI
@@ -345,13 +344,14 @@ class Game(Frame):
         self.text.delete("1.0", END)
         if (self.currentRoom.name == "Battle"):
             self.battle()
-        elif (self.currentRoom == "Death"):
+        elif (self.currentRoom.name == "Death"):
             # if dead, let the player know
             self.player_input.config(state=DISABLED)
             self.text.insert(
                 END, "You are dead. The only thing you can do now is quit.\n")
             ###################### Insert command to display loosing image #####################
             # Use input to pause program without breaking functionaltiy
+            self.text.config(state=DISABLED)
             input()
         elif (self.currentRoom.name == "Outside"):
             # if player won, let the player know
@@ -360,6 +360,7 @@ class Game(Frame):
                 END, "Congrataz! You won!\n")
             ###################### Insert command to display winning image #####################
             # Use input to pause program without breaking functionaltiy
+            self.text.config(state=DISABLED)
             input()
         else:
             # set the status so the player has situational awareness
@@ -367,8 +368,7 @@ class Game(Frame):
             self.status = f"{self.currentRoom}\nYou are carrying: {self.inventory}\n"
             # otherwise, display the appropriate status
             self.text.insert(END, str(f"{self.status}\n\n{response}"))
-
-        self.text.config(state=DISABLED)
+            self.text.config(state=DISABLED)
 
     def processInput(self, event):
         # prompt for player input
