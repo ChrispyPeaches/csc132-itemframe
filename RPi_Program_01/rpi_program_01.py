@@ -163,8 +163,6 @@ class Game(Frame):
         # call the constructor in the superclass
         Frame.__init__(self, parent)
         self.doorPuzzle = DoorPuzzle()
-        
-        self.attempt = 4
 
     # Plays the game
 
@@ -194,7 +192,6 @@ class Game(Frame):
         self.r5 = Room("Outside")
         self.r6 = Room("Battle")
         self.r7 = Room("Death")
-        
 
         ############
         ## ROOM 1 ##
@@ -222,8 +219,8 @@ class Game(Frame):
         self.r2.addItem(
             "rug", "It is nice and Indian. It also needs to be vacuumed.")
         self.r2.addItem("fireplace", "It is full of ashes.")
-        self.r2.addItem("dog", "It looks back at you, perhaps inviting you to pet it?")
-
+        self.r2.addItem(
+            "dog", "It looks back at you, perhaps inviting you to pet it?")
 
         ############
         ## ROOM 3 ##
@@ -257,46 +254,48 @@ class Game(Frame):
         ################
         # Room 6 #####
         ###########
+
     def battle(self):
         self.player_input.bind("<Return>", self.battleProcessInput)
         self.player_input.delete(first=0, last=END)
         self.text.config(state=NORMAL)
-        self.generatednum = random.randint(1, 10)# change vak to 10
-
-        self.text.insert(END,"You jumped out of a window\n")
-        self.text.insert(END,"You get a second chance at life.\n")
-        self.text.insert(END,("Enter Number: \n"))
+        self.generatednum = random.randint(1, 10)  # change vak to 10
+        self.attempt = 4
+        self.text.insert(END, "You jumped out of a window\n")
+        self.text.insert(END, "You get a second chance at life.\n")
+        self.text.insert(END, ("Enter Number: \n"))
         input()
-        
-    def battleProcessInput(self,event):
+
+    def battleProcessInput(self, event):
         self.text.config(state=NORMAL)
         self.text.delete("1.0", END)
         user_input = int(self.player_input.get())
-        self.player_input.delete(first=0,last=END)
+        self.player_input.delete(first=0, last=END)
         if self.attempt > 0:
             if (user_input == self.generatednum):
                 self.currentRoom = self.r5
             elif user_input > self.generatednum:
-                #sleep(5000)
-                self.text.insert(END,f"{user_input} is greater.\nRemaining attempts: {self.attempt - 1}.\n")
+                # sleep(5000)
+                self.text.insert(
+                    END, f"{user_input} is greater.\nRemaining attempts: {self.attempt}.\n")
                 self.attempt -= 1
             elif user_input < self.generatednum:
-                #sleep(5000)
-                self.text.insert(END,f"{user_input} is smaller.\nRemaining attempts: {self.attempt - 1}.\n")
+                # sleep(5000)
+                self.text.insert(
+                    END, f"{user_input} is smaller.\nRemaining attempts: {self.attempt}.\n")
                 self.attempt -= 1
-        if(self.currentRoom == self.r5):
+        if (self.currentRoom == self.r5):
             self.updateStatus()
         else:
-            self.text.insert(END,"Try AGAIN\n")
-        if (self.attempt > 2):
-            self.currentRoom == self.r7
+            self.text.insert(END, "Try AGAIN\n")
+        if (self.attempt < 1):
+            self.currentRoom = self.r7
             self.updateStatus()
         self.text.config(state=DISABLED)
         input()
-        
-        
 
     # sets up the GUI
+
     def setupGUI(self):
         # Organize the GUI.
         self.pack(fill=BOTH, expand=1)
@@ -465,7 +464,7 @@ class Game(Frame):
                         # no need to check any more grabbable items
                         break
 
-            # the verb is: pet          
+            # the verb is: pet
             elif verb == "pet":
                 response = "you can't pet that."
 
@@ -473,15 +472,13 @@ class Game(Frame):
                     response = "You reach out to pet the dog, it leaps forward and bites you. Before you can do anything it flees out of the room."
                     self.currentRoom.items.remove("dog")
 
-
             # the verb is drink
             elif verb == "drink":
                 response = "you can't drink that."
-                
-                if "6-pack" in self.inventory:                  # added drinking the brew, it kills you 
+
+                if "6-pack" in self.inventory:                  # added drinking the brew, it kills you
                     response = "You drink the brew, it smells funny. You pass out for mysterious reasons and dont awaken."
                     self.currentRoom = self.r6
-                     
 
             else:
                 response = "I don't understand. Try verb noun.  Valid verbs are go, look, drink, pet, and take"
@@ -582,6 +579,7 @@ class DoorPuzzle():
             # Change the current room to outide
             self.gameObj.currentRoom = self.gameObj.r5
         g.updateStatus(response)
+
 
 ##########################################################
 # START THE GAME!!!
