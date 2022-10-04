@@ -249,22 +249,26 @@ class Game(Frame):
         # set room 1 as the current room at the beginning of the game
         self.currentRoom = self.r1
     def game(self):
-        num = random.randint(1, 10)
+        user_input = self.player_input.get()
+        self.text.config(state=NORMAL)
+        num = str(random.randint(1, 10))
         attempt = 4
-        msg = 'You Lost Now Die'
+        self.text.insert(END,"You get a second chance.\n")
+        self.text.insert(END,('Enter Number: \n'))
         while attempt > 0:
-            user_input = int(input('Enter Number: '))
-            if user_input == num:
+            if (user_input == num):
+                self.text.insert(END,"You Won")
                 self.currentRoom = self.r5
+                break
             elif user_input > num:
-                print(f'{user_input} is greater.\nRemaining attempts: {attempt}.')
+                self.text.insert(END,f'{user_input} is greater.\nRemaining attempts: {attempt}.\n')
                 attempt -= 1
             elif user_input < num:
-                print(f'{user_input} is smaller.\nRemaining attempts: {attempt}.')
+                self.text.insert(END,f'{user_input} is smaller.\nRemaining attempts: {attempt}.\n')
                 attempt -= 1
             else:
                 print("Thats not a number stupid human")
-        self.currentRoom = None
+        
 
 
 
@@ -319,9 +323,8 @@ class Game(Frame):
         if (self.currentRoom == None):
             self.game()
             # if dead, let the player know
-            self.player_input.config(state=DISABLED)
             self.text.insert(
-                END, "You are dead. The only thing you can do now is quit.\n")
+                END, "You are dead.\n")
             ###################### Insert command to display loosing image #####################
             # Use input to pause program without breaking functionaltiy
             input()
