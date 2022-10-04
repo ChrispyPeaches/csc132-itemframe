@@ -21,6 +21,8 @@
 ######################################################################
 ######################################################################
 from random import randint
+from time import sleep
+import random
 from tkinter import *
 # the default size of the GUI is 800x600
 WIDTH = 800
@@ -188,6 +190,8 @@ class Game(Frame):
         self.r4 = Room("Room 4")
         # Adds a room named "outside" listed as self.r5.
         self.r5 = Room("Outside")
+        self.r6 = Room("Battle")
+        self.r7 = Room("Death")
 
         ############
         ## ROOM 1 ##
@@ -215,8 +219,8 @@ class Game(Frame):
         self.r2.addItem(
             "rug", "It is nice and Indian. It also needs to be vacuumed.")
         self.r2.addItem("fireplace", "It is full of ashes.")
-        self.r2.addItem("dog", "It looks back at you, perhaps inviting you to pet it?")
-
+        self.r2.addItem(
+            "dog", "It looks back at you, perhaps inviting you to pet it?")
 
         ############
         ## ROOM 3 ##
@@ -238,7 +242,7 @@ class Game(Frame):
         # add exits to room 4
         self.r4.addExit("north", self.r2)
         self.r4.addExit("west", self.r3)
-        self.r4.addExit("south", None)  # DEATH!
+        self.r4.addExit("south", self.r6)  # DEATH!
         # add grabbables to room 4
         self.r4.addGrabbable(
             "6-pack", "It read's the brand 'Jrbiibo'p'. You recognize the graphics to be the 'Mueller's' Brand")
@@ -247,8 +251,50 @@ class Game(Frame):
             "brew_rig", "Gourd is brewing some sort of oatmeal stout on the brew rig. A 6-pack is resting beside it.")
         # set room 1 as the current room at the beginning of the game
         self.currentRoom = self.r1
+        ################
+        # Room 6 #####
+        ###########
+
+    def battle(self):
+        self.player_input.bind("<Return>", self.battleProcessInput)
+        self.player_input.delete(first=0, last=END)
+        self.text.config(state=NORMAL)
+        self.generatednum = random.randint(1, 10)  # change vak to 10
+        self.attempt = 4
+        self.text.insert(END, "You jumped out of a window\n")
+        self.text.insert(END, "You get a second chance at life.\n")
+        self.text.insert(END, ("Enter Number: \n"))
+        input()
+
+    def battleProcessInput(self, event):
+        self.text.config(state=NORMAL)
+        self.text.delete("1.0", END)
+        user_input = int(self.player_input.get())
+        self.player_input.delete(first=0, last=END)
+        if self.attempt > 0:
+            if (user_input == self.generatednum):
+                self.currentRoom = self.r5
+            elif user_input > self.generatednum:
+                self.attempt -= 1
+                self.text.insert(
+                    END, f"{user_input} is greater.\nRemaining attempts: {self.attempt}.\n")
+            elif user_input < self.generatednum:
+                self.attempt -= 1
+                self.text.insert(
+                    END, f"{user_input} is smaller.\nRemaining attempts: {self.attempt}.\n")
+
+        self.text.config(state=DISABLED)
+        if (self.currentRoom == self.r5):
+            self.updateStatus()
+        else:
+            self.text.insert(END, "Try AGAIN\n")
+        if (self.attempt == 0):
+            self.currentRoom = self.r7
+            self.updateStatus()
+        input()
 
     # sets up the GUI
+
     def setupGUI(self):
         # Organize the GUI.
         self.pack(fill=BOTH, expand=1)
@@ -296,13 +342,16 @@ class Game(Frame):
         # display the status
         self.text.config(state=NORMAL)
         self.text.delete("1.0", END)
-        if (self.currentRoom == None):
+        if (self.currentRoom.name == "Battle"):
+            self.battle()
+        elif (self.currentRoom.name == "Death"):
             # if dead, let the player know
             self.player_input.config(state=DISABLED)
             self.text.insert(
                 END, "You are dead. The only thing you can do now is quit.\n")
             ###################### Insert command to display loosing image #####################
             # Use input to pause program without breaking functionaltiy
+            self.text.config(state=DISABLED)
             input()
         elif (self.currentRoom.name == "Outside"):
             # if player won, let the player know
@@ -311,6 +360,7 @@ class Game(Frame):
                 END, "Congrataz! You won!\n")
             ###################### Insert command to display winning image #####################
             # Use input to pause program without breaking functionaltiy
+            self.text.config(state=DISABLED)
             input()
         else:
             # set the status so the player has situational awareness
@@ -318,8 +368,7 @@ class Game(Frame):
             self.status = f"{self.currentRoom}\nYou are carrying: {self.inventory}\n"
             # otherwise, display the appropriate status
             self.text.insert(END, str(f"{self.status}\n\n{response}"))
-
-        self.text.config(state=DISABLED)
+            self.text.config(state=DISABLED)
 
     def processInput(self, event):
         # prompt for player input
@@ -415,7 +464,7 @@ class Game(Frame):
                         # no need to check any more grabbable items
                         break
 
-            # the verb is: pet          
+            # the verb is: pet
             elif verb == "pet":
                 response = "you can't pet that."
 
@@ -423,16 +472,13 @@ class Game(Frame):
                     response = "You reach out to pet the dog, it leaps forward and bites you. Before you can do anything it flees out of the room."
                     self.currentRoom.items.remove("dog")
 
-
             # the verb is drink
             elif verb == "drink":
                 response = "you can't drink that."
-                
-                if "6-pack" in self.inventory:                  # added drinking the brew, it kills you 
-                    response = "You drink the brew, it smells funny. You pass out for mysterious reasons and dont awaken."
-                    self.currentRoom = None
-                     
 
+                if "6-pack" in self.inventory:                  # added drinking the brew, it kills you
+                    response = "You drink the brew, it smells funny. You pass out for mysterious reasons and dont awaken."
+                    self.currentRoom = self.r6
             else:
                 response = "I don't understand. Try verb noun.  Valid verbs are go, look, drink, pet, and take"
         else:
@@ -548,8 +594,8 @@ window.geometry(f"{WIDTH}x{HEIGHT}")
 window.protocol("WM_DELETE_WINDOW", lambda: exit())
 
 # create the GUI as a Tkinter canvas inside the window
-g = Game(window)
+Game(window).play()
 # play the game
-g.play()
+
 
 window.mainloop()
