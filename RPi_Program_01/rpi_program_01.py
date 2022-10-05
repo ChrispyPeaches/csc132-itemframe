@@ -171,7 +171,13 @@ class Game(Frame):
     def __init__(self, parent):
         # call the constructor in the superclass
         Frame.__init__(self, parent)
-        self.doorPuzzle = DoorPuzzle()
+        # Set the passphrase for the puzzle
+        self.passphrase = "Puzzle Passphrase"
+        # Encodes the given phrase for the puzzle and stores it
+        self.encodedPhrase = self.doorPuzzleEncode()
+        # Keeps track of how many times the user accessed the door function
+        self.doorAttempts = 0
+        self.doorSuccess = False
 
     # Plays the game
 
@@ -429,8 +435,8 @@ class Game(Frame):
                         # If the exit called is door and the user hasn't solved the puzzle, don't change the room.
                         # This also calls the door() function for the puzzle to be attempted.
                         if (self.currentRoom.exits[i] == 'door'):
-                            self.doorPuzzle.gameObj = self
-                            self.doorPuzzle.play()
+                            self.doorPuzzlePlay()
+                            return None
                         # change the current room to the one that is
                         # associated with the specified exit
                         self.currentRoom = self.currentRoom.exitLocations[i]
@@ -438,7 +444,6 @@ class Game(Frame):
                         response = "Room changed."
                         # no need to check any more exits
                         break
-
             # the verb is: look
             elif (verb == "look"):
                 # set a default response
@@ -517,18 +522,7 @@ class Game(Frame):
         self.player_input.delete(first=0, last=END)
         self.updateStatus(response)
 
-
-class DoorPuzzle():
-    def __init__(self):
-        # Set the passphrase for the puzzle
-        self.passphrase = "Puzzle Passphrase"
-        # Encodes the given phrase for the puzzle and stores it
-        self.encodedPhrase = self.encode()
-        # Keeps track of how many times the user accessed the door function
-        self.doorAttempts = 0
-        self.doorSuccess = False
-
-    def encode(self):
+    def doorPuzzleEncode(self):
         #       - It does this by taking a list of all alphabetic characters, one for upper case, one for lower case
         #           and shifts it by a random amount with a possible range of [3,7] shifted characters, then converts
         #           the characters to a string.
@@ -561,7 +555,7 @@ class DoorPuzzle():
         return s
 
     #   This funciton starts the door puzzle where the cipher is implemented.
-    def play(self):
+    def doorPuzzlePlay(self):
         #   - The user is told a phrase and is instructed to decipher the phrase. They'll be able to find
         #       a list of ciphers in the "book" item in Room 3
         #   - The door gives different responses based on success and how many times the user has accessed
@@ -569,24 +563,24 @@ class DoorPuzzle():
         #   - I got this idea from a D&D puzzle for my campaign I created with similar attributes
         #   - If the user puts in the correct deciphered phrase, the function returns True, otherwise False
         #       - This tells the "go" verb if-then statement whether the user succeeded or not
-        self.gameObj.player_input.bind("<Return>", self.processInput)
-        self.gameObj.player_input.delete(first=0, last=END)
-        self.gameObj.text.config(state=NORMAL)
-        self.gameObj.text.delete("1.0", END)
+        self.player_input.bind("<Return>", self.doorPuzzleProcessInput)
+        self.player_input.delete(first=0, last=END)
+        self.text.config(state=NORMAL)
+        self.text.delete("1.0", END)
         if (self.doorAttempts == 0):
-            self.gameObj.text.insert(END, str(
+            self.text.insert(END, str(
                 f"The Door speaks,\n'Don't be brash, solve my puzzle in order to pass.'\nDecipher this phrase.\n{self.encodedPhrase}"))
         else:
-            self.gameObj.text.insert(
+            self.text.insert(
                 END, str(f"The Door speaks,\nDecipher this phrase.\n{self.encodedPhrase}"))
 
-        self.gameObj.text.config(state=DISABLED)
-        # Wait's until return key is pressed, then calls on DoorPuzzle.processInput()
-        input()
+        self.text.config(state=DISABLED)
+        # Wait's until return key is pressed, then calls on DoorPuzzle.processInput()]
 
-    def processInput(self, event):
+    def doorPuzzleProcessInput(self, event):
         response = ""
-        if (self.gameObj.player_input.get() == self.passphrase):
+        self.text.config(state=NORMAL)
+        if (self.player_input.get() == self.passphrase):
             self.doorSuccess = True
         else:
             if (self.doorAttempts < 3):
@@ -596,17 +590,17 @@ class DoorPuzzle():
 
             self.doorAttempts += 1
             self.doorSuccess = False
-        self.gameObj.text.config(state=DISABLED)
+        self.text.config(state=DISABLED)
         # Update variables and return to the main game
-        self.returnToGame(response)
+        self.doorPuzzleReturnToGame(response)
 
-    def returnToGame(self, response=""):
-        self.gameObj.player_input.bind("<Return>", self.gameObj.processInput)
-        self.gameObj.player_input.delete(first=0, last=END)
+    def doorPuzzleReturnToGame(self, response=""):
+        self.player_input.bind("<Return>", self.processInput)
+        self.player_input.delete(first=0, last=END)
         if self.doorSuccess == True:
             # Change the current room to outide
-            self.gameObj.currentRoom = self.gameObj.r5
-        g.updateStatus(response)
+            self.currentRoom = self.r5
+        self.updateStatus(response)
 
 
 ##########################################################
@@ -623,8 +617,9 @@ window.geometry(f"{WIDTH}x{HEIGHT}")
 window.protocol("WM_DELETE_WINDOW", lambda: exit())
 
 # create the GUI as a Tkinter canvas inside the window
-Game(window).play()
-# play the game
+g = Game(window)
 
+g.play()
+# play the game
 
 window.mainloop()
