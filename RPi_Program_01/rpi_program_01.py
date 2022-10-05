@@ -280,7 +280,6 @@ class Game(Frame):
         self.text.insert(END, "You jumped out of a window\n")
         self.text.insert(END, "You get a second chance at life.\n")
         self.text.insert(END, ("Enter Number: \n"))
-        input()
 
     def battleProcessInput(self, event):
         self.text.config(state=NORMAL)
@@ -300,14 +299,13 @@ class Game(Frame):
                     END, f"{user_input} is smaller.\nRemaining attempts: {self.attempt}.\n")
 
         self.text.config(state=DISABLED)
-        if (self.currentRoom == self.r5):
+        if (user_input == self.generatednum):
             self.updateStatus()
         else:
             self.text.insert(END, "Try AGAIN\n")
         if (self.attempt == 0):
             self.currentRoom = self.r7
             self.updateStatus()
-        input()
 
     # sets up the GUI
 
@@ -363,7 +361,7 @@ class Game(Frame):
             self.img = PhotoImage(file="resources/room3.png")
         elif ("6-pack" not in self.r4.grabbables and self.currentRoom is self.r4):
             self.img = PhotoImage(file="resources/room4.png")
-        #elif(self.currentRoom is self.r8):
+        # elif(self.currentRoom is self.r8):
             #self.img = PhotoImage(file="resources/thedoor.png")
         else:
             self.img = PhotoImage(file=self.currentRoom.image)
@@ -387,7 +385,7 @@ class Game(Frame):
             ###################### Insert command to display loosing image #####################
             # Use input to pause program without breaking functionaltiy
             self.text.config(state=DISABLED)
-            input()
+
         elif (self.currentRoom.name == "Outside"):
             # if player won, let the player know
             self.player_input.config(state=DISABLED)
@@ -397,7 +395,7 @@ class Game(Frame):
             ###################### Insert command to display winning image #####################
             # Use input to pause program without breaking functionaltiy
             self.text.config(state=DISABLED)
-            return None
+
         else:
             # set the status so the player has situational awareness
             # the status has room and inventory information
@@ -561,7 +559,7 @@ class Game(Frame):
     def doorPuzzlePlay(self):
         #   - The user is told a phrase and is instructed to decipher the phrase. They'll be able to find
         #       a list of ciphers in the "book" item in Room 3
-        #   - The door gives different responses based on success and how many times the user has accessed
+        #   - The door gives different responses based on success and how many times the user has accessedt()
         #       the door to decrease annoyance with the puzzle
         #   - I got this idea from a D&D puzzle for my campaign I created with similar attributes
         #   - If the user puts in the correct deciphered phrase, the function returns True, otherwise False
