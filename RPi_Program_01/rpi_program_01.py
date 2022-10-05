@@ -397,7 +397,7 @@ class Game(Frame):
             ###################### Insert command to display winning image #####################
             # Use input to pause program without breaking functionaltiy
             self.text.config(state=DISABLED)
-            input()
+            return None
         else:
             # set the status so the player has situational awareness
             # the status has room and inventory information
@@ -418,7 +418,7 @@ class Game(Frame):
         # exit the program if the player wants to leave (supports quit,
         # exit, and bye)
         if (action == "quit" or action == "exit" or action == "bye"):
-            exit()
+            endgame()
         # split the user input into words (words are separated by spaces)
         words = action.split()
         response = ""
@@ -614,6 +614,11 @@ class Game(Frame):
         self.updateStatus(response)
 
 
+def endgame():
+    window.destroy()
+    exit()
+
+
 ##########################################################
 # START THE GAME!!!
 ##########################################################
@@ -625,7 +630,7 @@ HEIGHT = 600
 window = Tk()
 window.title("Room Adventure")
 window.geometry(f"{WIDTH}x{HEIGHT}")
-window.protocol("WM_DELETE_WINDOW", lambda: exit())
+window.protocol("WM_DELETE_WINDOW", lambda: endgame())
 
 # create the GUI as a Tkinter canvas inside the window
 g = Game(window)
