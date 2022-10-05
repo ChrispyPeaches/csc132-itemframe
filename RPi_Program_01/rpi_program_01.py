@@ -37,12 +37,13 @@ HEIGHT = 600
 
 class Room:
     # the constructor
-    def __init__(self, name):
+    def __init__(self, name, image):
         # rooms have a name, exits (e.g., south), exit locations
         # (e.g., to the south is room n), items (e.g., table), item
         # descriptions (for each item), and grabbables (things that
         # can be taken into inventory)
         self.name = name
+        self.image = image
         self.exits = []
         self.exitLocations = []
         self.items = []
@@ -57,6 +58,14 @@ class Room:
     @name.setter
     def name(self, value):
         self._name = value
+
+    @property
+    def image(self):
+        return self._image
+
+    @image.setter
+    def image(self, value):
+        self._image = value
 
     @property
     def exits(self):
@@ -184,14 +193,14 @@ class Game(Frame):
         # since it needs to be changed in the main part of the program,
         # it must be global
         # create the rooms and give them meaningful names
-        self.r1 = Room("Room 1")
-        self.r2 = Room("Room 2")
-        self.r3 = Room("Room 3")
-        self.r4 = Room("Room 4")
+        self.r1 = Room("Room 1", "resources/room1full.png")
+        self.r2 = Room("Room 2", "resources/room2dog.png")
+        self.r3 = Room("Room 3", "resources/room3full.png")
+        self.r4 = Room("Room 4", "resources/room4full.png")
         # Adds a room named "outside" listed as self.r5.
-        self.r5 = Room("Outside")
-        self.r6 = Room("Battle")
-        self.r7 = Room("Death")
+        self.r5 = Room("Outside", "resources/win.png")
+        self.r6 = Room("Battle", "resources/battle.png")
+        self.r7 = Room("Death", "resources/dead.png")
 
         ############
         ## ROOM 1 ##
@@ -335,7 +344,22 @@ class Game(Frame):
     # sets the current room image
 
     def setRoomImage(self):
-        pass
+        if (self.currentRoom == "Death"):
+            self.img = PhotoImage(file="resources/dead.png")
+        elif (self.currentRoom == "Battle"):
+            self.img = PhotoImage(file="resources/battle.png")
+        elif ("key" not in self.r1.grabbables and self.currentRoom is self.r1):
+            self.img = PhotoImage(file="resources/room1.png")
+        elif ("dog" not in self.r2.items and self.currentRoom is self.r2):
+            self.img = PhotoImage(file="resources/room2.png")
+        elif ("book" not in self.r3.grabbables and self.currentRoom is self.r3):
+            self.img = PhotoImage(file="resources/room3.png")
+        elif ("6-pack" not in self.r4.grabbables and self.currentRoom is self.r4):
+            self.img = PhotoImage(file="resources/room4.png")
+        else:
+            self.img = PhotoImage(file=self.currentRoom.image)
+        self.image.config(image=self.img)
+        self.image.image = self.img
 
     # sets the status displayed on the right of the GUI
     def updateStatus(self, response=""):
@@ -344,11 +368,13 @@ class Game(Frame):
         self.text.delete("1.0", END)
         if (self.currentRoom.name == "Battle"):
             self.battle()
+            self.setRoomImage()
         elif (self.currentRoom.name == "Death"):
             # if dead, let the player know
             self.player_input.config(state=DISABLED)
             self.text.insert(
                 END, "You are dead. The only thing you can do now is quit.\n")
+            self.setRoomImage()
             ###################### Insert command to display loosing image #####################
             # Use input to pause program without breaking functionaltiy
             self.text.config(state=DISABLED)
@@ -358,6 +384,7 @@ class Game(Frame):
             self.player_input.config(state=DISABLED)
             self.text.insert(
                 END, "Congrataz! You won!\n")
+            self.setRoomImage()
             ###################### Insert command to display winning image #####################
             # Use input to pause program without breaking functionaltiy
             self.text.config(state=DISABLED)
@@ -368,6 +395,7 @@ class Game(Frame):
             self.status = f"{self.currentRoom}\nYou are carrying: {self.inventory}\n"
             # otherwise, display the appropriate status
             self.text.insert(END, str(f"{self.status}\n\n{response}"))
+            self.setRoomImage()
             self.text.config(state=DISABLED)
 
     def processInput(self, event):
@@ -471,6 +499,7 @@ class Game(Frame):
                 if "dog" in self.currentRoom.items:
                     response = "You reach out to pet the dog, it leaps forward and bites you. Before you can do anything it flees out of the room."
                     self.currentRoom.items.remove("dog")
+                    self.setRoomImage()
 
             # the verb is drink
             elif verb == "drink":
