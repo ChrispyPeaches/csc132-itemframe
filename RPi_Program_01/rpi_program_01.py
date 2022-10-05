@@ -207,6 +207,7 @@ class Game(Frame):
         self.r5 = Room("Outside", "resources/win.png")
         self.r6 = Room("Battle", "resources/battle.png")
         self.r7 = Room("Death", "resources/dead.png")
+        self.r8 = Room("Door", "resources/thedoor.png")
 
         ############
         ## ROOM 1 ##
@@ -362,6 +363,8 @@ class Game(Frame):
             self.img = PhotoImage(file="resources/room3.png")
         elif ("6-pack" not in self.r4.grabbables and self.currentRoom is self.r4):
             self.img = PhotoImage(file="resources/room4.png")
+        #elif(self.currentRoom is self.r8):
+            #self.img = PhotoImage(file="resources/thedoor.png")
         else:
             self.img = PhotoImage(file=self.currentRoom.image)
         self.image.config(image=self.img)
@@ -568,9 +571,13 @@ class Game(Frame):
         self.text.config(state=NORMAL)
         self.text.delete("1.0", END)
         if (self.doorAttempts == 0):
+            self.currentRoom = self.r8
+            self.setRoomImage()
             self.text.insert(END, str(
                 f"The Door speaks,\n'Don't be brash, solve my puzzle in order to pass.'\nDecipher this phrase.\n{self.encodedPhrase}"))
         else:
+            self.currentRoom = self.r8
+            self.setRoomImage()
             self.text.insert(
                 END, str(f"The Door speaks,\nDecipher this phrase.\n{self.encodedPhrase}"))
 
@@ -584,8 +591,12 @@ class Game(Frame):
             self.doorSuccess = True
         else:
             if (self.doorAttempts < 3):
+                self.currentRoom = self.r1
+                self.setRoomImage()
                 response = "\nThe Door speaks,\n'Invalid. Come back and try again. There might be a clue somewhere...'"
             else:
+                self.currentRoom = self.r1
+                self.setRoomImage()
                 response = f"\nThe Door speaks,\n'Invalid. You might wanna look for clues in {self.r3.name}'"
 
             self.doorAttempts += 1
