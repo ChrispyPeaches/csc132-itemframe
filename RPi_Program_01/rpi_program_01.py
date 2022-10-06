@@ -1,6 +1,6 @@
 ######################################################################
-# Name:         Chris Perry, Sharantz Green, Lucas Prestenbach, Cory Strickland
-# Date:         4/4/22
+# Name:         Chris Perry, Sharantz Green, Lucas Alvarado, Cory Strickland
+# Date:         10/5/22
 # Description:  A text-based game that puts a user in a mansion with 4 rooms.
 #                   - There exists a puzzle.
 #                       - A door requires a phrase to be deciphered
@@ -199,7 +199,7 @@ class Game(Frame):
         # be one of self.r1 through self.r4)
         # since it needs to be changed in the main part of the program,
         # it must be global
-        # create the rooms and give them meaningful names
+        # create the rooms and give them meaningful names and images to match
         self.r1 = Room("Room 1", "resources/room1full.png")
         self.r2 = Room("Room 2", "resources/room2dog.png")
         self.r3 = Room("Room 3", "resources/room3full.png")
@@ -356,6 +356,7 @@ class Game(Frame):
             self.img = PhotoImage(file="resources/dead.png")
         elif (self.currentRoom == "Battle"):
             self.img = PhotoImage(file="resources/battle.png")
+        #sets the room image to show no items
         elif ("key" not in self.r1.grabbables and self.currentRoom is self.r1):
             self.img = PhotoImage(file="resources/room1.png")
         elif ("dog" not in self.r2.items and self.currentRoom is self.r2):
@@ -364,8 +365,6 @@ class Game(Frame):
             self.img = PhotoImage(file="resources/room3.png")
         elif ("6-pack" not in self.r4.grabbables and self.currentRoom is self.r4):
             self.img = PhotoImage(file="resources/room4.png")
-        # elif(self.currentRoom is self.r8):
-            #self.img = PhotoImage(file="resources/thedoor.png")
         else:
             self.img = PhotoImage(file=self.currentRoom.image)
         self.image.config(image=self.img)
@@ -570,11 +569,13 @@ class Game(Frame):
         self.text.config(state=NORMAL)
         self.text.delete("1.0", END)
         if (self.doorAttempts == 0):
+            #updates image to show the door
             self.currentRoom = self.r8
             self.setRoomImage()
             self.text.insert(END, str(
                 f"The Door speaks,\n'Don't be brash, solve my puzzle in order to pass.'\nDecipher this phrase.\n{self.encodedPhrase}"))
         else:
+            #updates image to show the door
             self.currentRoom = self.r8
             self.setRoomImage()
             self.text.insert(
@@ -591,10 +592,12 @@ class Game(Frame):
             self.doorSuccess = True
         else:
             if (self.doorAttempts < 3):
+                #returns to room 1 image
                 self.currentRoom = self.r1
                 self.setRoomImage()
                 response = "\nThe Door speaks,\n'Invalid. Come back and try again. There might be a clue somewhere...'"
             else:
+                #returns to room 1 image
                 self.currentRoom = self.r1
                 self.setRoomImage()
                 response = f"\nThe Door speaks,\n'Invalid. You might wanna look for clues in {self.r3.name}'"
