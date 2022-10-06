@@ -1,7 +1,7 @@
 ######################################################################
 # Name:         Chris Perry, Sharantz Green, Lucas Prestenbach, Cory Strickland
 # Date:         4/4/22
-# Description:  A text-based game that puts a user in a mansion with 4 rooms.
+# Description:  A text and GUI-based game that puts a user in a mansion with 4 rooms.
 #                   - There exists a puzzle.
 #                       - A door requires a phrase to be deciphered
 #                       - The phrase is changeable and randomly encrypted.
@@ -18,6 +18,7 @@
 #                                   "Miller".
 #                   - There exists an exit through a window that ends the game.
 #                       - When they loose the game, a skull displays.
+#
 ######################################################################
 ######################################################################
 from random import randint
