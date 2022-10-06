@@ -1,5 +1,5 @@
 ######################################################################
-# Name:         Chris Perry
+# Name:         Chris Perry, Sharantz Green, Lucas Prestenbach, Cory Strickland
 # Date:         4/4/22
 # Description:  A text-based game that puts a user in a mansion with 4 rooms.
 #                   - There exists a puzzle.
@@ -177,6 +177,7 @@ class Game(Frame):
         self.encodedPhrase = self.doorPuzzleEncode()
         # Keeps track of how many times the user accessed the door function
         self.doorAttempts = 0
+        # Keeps track of it the user succeeded the door puzzle
         self.doorSuccess = False
 
     # Plays the game
@@ -188,7 +189,7 @@ class Game(Frame):
         self.inventory = []
         # Adds a container to store descriptions of items and grabbables in the inventory
         self.inventoryDesc = []
-        # configure the GUI
+        # Initialized and configure the GUI
         self.setupGUI()
 
     # Creates the rooms
@@ -203,10 +204,11 @@ class Game(Frame):
         self.r2 = Room("Room 2", "resources/room2dog.png")
         self.r3 = Room("Room 3", "resources/room3full.png")
         self.r4 = Room("Room 4", "resources/room4full.png")
-        # Adds a room named "outside" listed as self.r5.
+        # Adds a room where if the user is here, they've won the game
         self.r5 = Room("Outside", "resources/win.png")
         self.r6 = Room("Battle", "resources/battle.png")
         self.r7 = Room("Death", "resources/dead.png")
+        # Adds a "room" for the door puzzle. Done for GUI purposes, from an abstract POV, this is not a room
         self.r8 = Room("Door", "resources/thedoor.png")
 
         ############
@@ -284,6 +286,9 @@ class Game(Frame):
     def battleProcessInput(self, event):
         self.text.config(state=NORMAL)
         self.text.delete("1.0", END)
+        # Exits out of
+        if (isinstance(self.player_input.text, int) == False):
+            return None
         user_input = int(self.player_input.get())
         self.player_input.delete(first=0, last=END)
         if self.attempt > 0:
@@ -308,7 +313,6 @@ class Game(Frame):
             self.updateStatus()
 
     # sets up the GUI
-
     def setupGUI(self):
         # Organize the GUI.
         self.pack(fill=BOTH, expand=1)
@@ -347,7 +351,6 @@ class Game(Frame):
         self.updateStatus()
 
     # sets the current room image
-
     def setRoomImage(self):
         if (self.currentRoom == "Death"):
             self.img = PhotoImage(file="resources/dead.png")
@@ -377,23 +380,19 @@ class Game(Frame):
             self.battle()
             self.setRoomImage()
         elif (self.currentRoom.name == "Death"):
-            # if dead, let the player know
+            # if dead, let the player know and disable player input
             self.player_input.config(state=DISABLED)
             self.text.insert(
                 END, "You are dead. The only thing you can do now is quit.\n")
             self.setRoomImage()
-            ###################### Insert command to display loosing image #####################
-            # Use input to pause program without breaking functionaltiy
             self.text.config(state=DISABLED)
 
         elif (self.currentRoom.name == "Outside"):
-            # if player won, let the player know
+            # if player won, let the player know and disbale player input
             self.player_input.config(state=DISABLED)
             self.text.insert(
                 END, "Congrataz! You won!\n")
             self.setRoomImage()
-            ###################### Insert command to display winning image #####################
-            # Use input to pause program without breaking functionaltiy
             self.text.config(state=DISABLED)
 
         else:
@@ -405,6 +404,7 @@ class Game(Frame):
             self.setRoomImage()
             self.text.config(state=DISABLED)
 
+    # Processes input from the entry input from the GUI
     def processInput(self, event):
         # prompt for player input
         # the game supports a simple language of <verb> <noun>
@@ -433,8 +433,9 @@ class Game(Frame):
                 for i in range(len(self.currentRoom.exits)):
                     # a valid exit is found
                     if (noun == self.currentRoom.exits[i]):
-                        # If the exit called is door and the user hasn't solved the puzzle, don't change the room.
-                        # This also calls the door() function for the puzzle to be attempted.
+                        # If the door exit is called, lead the user to the door puzzle.
+                        # "return None" is here so when waiting for input for the door puzzle,
+                        # the rest of the code in this function doesn't run.
                         if (self.currentRoom.exits[i] == 'door'):
                             self.doorPuzzlePlay()
                             return None
@@ -523,6 +524,7 @@ class Game(Frame):
         self.player_input.delete(first=0, last=END)
         self.updateStatus(response)
 
+    # This function encodes the phrase for the door puzzle.
     def doorPuzzleEncode(self):
         #       - It does this by taking a list of all alphabetic characters, one for upper case, one for lower case
         #           and shifts it by a random amount with a possible range of [3,7] shifted characters, then converts
@@ -559,11 +561,10 @@ class Game(Frame):
     def doorPuzzlePlay(self):
         #   - The user is told a phrase and is instructed to decipher the phrase. They'll be able to find
         #       a list of ciphers in the "book" item in Room 3
-        #   - The door gives different responses based on success and how many times the user has accessedt()
+        #   - The door gives different responses based on success and how many times the user has accessed it
         #       the door to decrease annoyance with the puzzle
         #   - I got this idea from a D&D puzzle for my campaign I created with similar attributes
-        #   - If the user puts in the correct deciphered phrase, the function returns True, otherwise False
-        #       - This tells the "go" verb if-then statement whether the user succeeded or not
+        # Bind the return key to the processing of input for the door puzzle
         self.player_input.bind("<Return>", self.doorPuzzleProcessInput)
         self.player_input.delete(first=0, last=END)
         self.text.config(state=NORMAL)
@@ -578,11 +579,12 @@ class Game(Frame):
             self.setRoomImage()
             self.text.insert(
                 END, str(f"The Door speaks,\nDecipher this phrase.\n{self.encodedPhrase}"))
-
         self.text.config(state=DISABLED)
-        # Wait's until return key is pressed, then calls on DoorPuzzle.processInput()]
 
+    # Processes the input for the door puzzle
     def doorPuzzleProcessInput(self, event):
+        #   - If the user puts in the correct deciphered phrase, the function sets self.doorSuccess to True, otherwise False
+        #       - This tells the program whether to go to the "Outside" room, or back to the room they were in
         response = ""
         self.text.config(state=NORMAL)
         if (self.player_input.get() == self.passphrase):
@@ -603,12 +605,15 @@ class Game(Frame):
         # Update variables and return to the main game
         self.doorPuzzleReturnToGame(response)
 
+    # This prepares the user to go back to the original game
     def doorPuzzleReturnToGame(self, response=""):
+        # Bind the return key back to the processing of input for the normal game
         self.player_input.bind("<Return>", self.processInput)
         self.player_input.delete(first=0, last=END)
+        # Change the current room to "Outside" if the door was successfully completed.
         if self.doorSuccess == True:
-            # Change the current room to outide
             self.currentRoom = self.r5
+        # Return back to the normal game.
         self.updateStatus(response)
 
 
