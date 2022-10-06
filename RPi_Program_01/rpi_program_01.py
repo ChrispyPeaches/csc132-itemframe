@@ -292,7 +292,7 @@ class Game(Frame):
         self.attempt = 4
         self.text.insert(END, "You jumped out of a window\n")
         self.text.insert(END, "You get a second chance at life.\n")
-        self.text.insert(END, ("Enter Number: \n"))
+        self.text.insert(END, ("Enter A Number: \n"))
 
     def battleProcessInput(self, event):
         # prompt for player input
@@ -301,8 +301,6 @@ class Game(Frame):
         self.text.config(state=NORMAL)
         self.text.delete("1.0", END)
         # This is actualy lines of code for the battle game againt the cpu
-        if (isinstance(self.player_input.text, int) == False):
-            return None
         user_input = int(self.player_input.get())
         self.player_input.delete(first=0, last=END)
         if self.attempt > 0:
@@ -316,6 +314,10 @@ class Game(Frame):
                 self.attempt -= 1
                 self.text.insert(
                     END, f"{user_input} is smaller.\nRemaining attempts: {self.attempt}.\n")
+            elif user_input == ValueError:
+                self.text.insert(
+                    END, f"{user_input} is not a number.\n")
+
             #logic for updating the status post figuring out the number whether you win or lose
         self.text.config(state=DISABLED)
         if (user_input == self.generatednum):
