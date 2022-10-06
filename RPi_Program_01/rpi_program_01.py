@@ -513,21 +513,19 @@ class Game(Frame):
                         break
 
             # the verb is: pet
-            elif verb == "pet":
-                response = "you can't pet that."
-
-                if "dog" in self.currentRoom.items:
+            elif verb == "pet":                                    
+                response = "you can't pet that."         # set a default response 
+                if "dog" in self.currentRoom.items:      # checks if dog is in list of room items
                     response = "You reach out to pet the dog, it leaps forward and bites you. Before you can do anything it flees out of the room."
-                    self.currentRoom.items.remove("dog")
+                    self.currentRoom.items.remove("dog")    # if yes message is diplayed and dog is removed from list, set room image to remove dog 
                     self.setRoomImage()
 
             # the verb is drink
             elif verb == "drink":
-                response = "you can't drink that."
-
-                if "6-pack" in self.inventory:                  # added drinking the brew, it kills you
+                response = "you can't drink that."      # set a default response
+                if "6-pack" in self.inventory:          # added drinking the brew, it kills you
                     response = "You drink the brew, it smells funny. You pass out for mysterious reasons and dont awaken."
-                    self.currentRoom = self.r6
+                    self.currentRoom = self.r6          # sets to death room, displays death message 
             else:
                 response = "I don't understand. Try verb noun.  Valid verbs are go, look, drink, pet, and take"
         else:
