@@ -18,7 +18,9 @@
 #                                   "Mueller" being connected to the surname
 #                                   "Miller".
 #                   - There exists an exit through a window that ends the game.
-#                       - When they loose the game, a skull displays.
+#                           -Before you meet your demise,prove your worth
+#                           -there is a battle room that allow you to "fight" the cpu
+#                           - When they loose the game, a skull displays.
 #
 ######################################################################
 ######################################################################
@@ -208,8 +210,10 @@ class Game(Frame):
         self.r4 = Room("Room 4", "resources/room4full.png")
         # Adds a room where if the user is here, they've won the game
         self.r5 = Room("Outside", "resources/win.png")
+        #Adds a battle room part of the battle done for gui
         self.r6 = Room("Battle", "resources/battle.png")
-        self.r7 = Room("Death", "resources/dead.png")
+        #Adds a room where if the user dies it displays a death message
+        self.r7 = Room("Death", "resources/dead.png") 
         # Adds a "room" for the door puzzle. Done for GUI purposes, from an abstract POV, this is not a room
         self.r8 = Room("Door", "resources/thedoor.png")
 
@@ -276,9 +280,14 @@ class Game(Frame):
         ###########
 
     def battle(self):
+        # The user is giving a limited amount of attempts to guess the number the computer is thinking
+        # It prompt you to enter the number then tells whether you are higher or lower than the number
+        # If you lose you get sent to death room otherwise your sent to the winning room
+        # Bind the return key to the processing of input for the door puzzle
         self.player_input.bind("<Return>", self.battleProcessInput)
         self.player_input.delete(first=0, last=END)
         self.text.config(state=NORMAL)
+        #This where the random number is generated and the text that is displayed in the gui
         self.generatednum = random.randint(1, 10)  # change vak to 10
         self.attempt = 4
         self.text.insert(END, "You jumped out of a window\n")
@@ -286,9 +295,12 @@ class Game(Frame):
         self.text.insert(END, ("Enter Number: \n"))
 
     def battleProcessInput(self, event):
+        # prompt for player input
+        # waits to read the number 
+        # if you lose your sent to the death room
         self.text.config(state=NORMAL)
         self.text.delete("1.0", END)
-        # Exits out of
+        # This is actualy lines of code for the battle game againt the cpu
         if (isinstance(self.player_input.text, int) == False):
             return None
         user_input = int(self.player_input.get())
@@ -304,7 +316,7 @@ class Game(Frame):
                 self.attempt -= 1
                 self.text.insert(
                     END, f"{user_input} is smaller.\nRemaining attempts: {self.attempt}.\n")
-
+            #logic for updating the status post figuring out the number whether you win or lose
         self.text.config(state=DISABLED)
         if (user_input == self.generatednum):
             self.updateStatus()
