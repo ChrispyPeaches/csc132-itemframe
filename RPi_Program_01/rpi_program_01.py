@@ -210,10 +210,10 @@ class Game(Frame):
         self.r4 = Room("Room 4", "resources/room4full.png")
         # Adds a room where if the user is here, they've won the game
         self.r5 = Room("Outside", "resources/win.png")
-        #Adds a battle room part of the battle done for gui
+        # Adds a battle room part of the battle done for gui
         self.r6 = Room("Battle", "resources/battle.png")
-        #Adds a room where if the user dies it displays a death message
-        self.r7 = Room("Death", "resources/dead.png") 
+        # Adds a room where if the user dies it displays a death message
+        self.r7 = Room("Death", "resources/dead.png")
         # Adds a "room" for the door puzzle. Done for GUI purposes, from an abstract POV, this is not a room
         self.r8 = Room("Door", "resources/thedoor.png")
 
@@ -287,7 +287,7 @@ class Game(Frame):
         self.player_input.bind("<Return>", self.battleProcessInput)
         self.player_input.delete(first=0, last=END)
         self.text.config(state=NORMAL)
-        #This where the random number is generated and the text that is displayed in the gui
+        # This where the random number is generated and the text that is displayed in the gui
         self.generatednum = random.randint(1, 10)  # change vak to 10
         self.attempt = 4
         self.text.insert(END, "You jumped out of a window\n")
@@ -296,7 +296,7 @@ class Game(Frame):
 
     def battleProcessInput(self, event):
         # prompt for player input
-        # waits to read the number 
+        # waits to read the number
         # if you lose your sent to the death room
         self.text.config(state=NORMAL)
         self.text.delete("1.0", END)
@@ -316,7 +316,7 @@ class Game(Frame):
                 self.attempt -= 1
                 self.text.insert(
                     END, f"{user_input} is smaller.\nRemaining attempts: {self.attempt}.\n")
-            #logic for updating the status post figuring out the number whether you win or lose
+            # logic for updating the status post figuring out the number whether you win or lose
         self.text.config(state=DISABLED)
         if (user_input == self.generatednum):
             self.updateStatus()
@@ -370,7 +370,7 @@ class Game(Frame):
             self.img = PhotoImage(file="resources/dead.png")
         elif (self.currentRoom == "Battle"):
             self.img = PhotoImage(file="resources/battle.png")
-        #sets the room image to show no items
+        # sets the room image to show no items
         elif ("key" not in self.r1.grabbables and self.currentRoom is self.r1):
             self.img = PhotoImage(file="resources/room1.png")
         elif ("dog" not in self.r2.items and self.currentRoom is self.r2):
@@ -513,11 +513,12 @@ class Game(Frame):
                         break
 
             # the verb is: pet
-            elif verb == "pet":                                    
-                response = "you can't pet that."         # set a default response 
+            elif verb == "pet":
+                response = "you can't pet that."         # set a default response
                 if "dog" in self.currentRoom.items:      # checks if dog is in list of room items
                     response = "You reach out to pet the dog, it leaps forward and bites you. Before you can do anything it flees out of the room."
-                    self.currentRoom.items.remove("dog")    # if yes message is diplayed and dog is removed from list, set room image to remove dog 
+                    # if yes message is diplayed and dog is removed from list, set room image to remove dog
+                    self.currentRoom.items.remove("dog")
                     self.setRoomImage()
 
             # the verb is drink
@@ -525,7 +526,7 @@ class Game(Frame):
                 response = "you can't drink that."      # set a default response
                 if "6-pack" in self.inventory:          # added drinking the brew, it kills you
                     response = "You drink the brew, it smells funny. You pass out for mysterious reasons and dont awaken."
-                    self.currentRoom = self.r6          # sets to death room, displays death message 
+                    self.currentRoom = self.r6          # sets to death room, displays death message
             else:
                 response = "I don't understand. Try verb noun.  Valid verbs are go, look, drink, pet, and take"
         else:
@@ -581,13 +582,13 @@ class Game(Frame):
         self.text.config(state=NORMAL)
         self.text.delete("1.0", END)
         if (self.doorAttempts == 0):
-            #updates image to show the door
+            # updates image to show the door
             self.currentRoom = self.r8
             self.setRoomImage()
             self.text.insert(END, str(
                 f"The Door speaks,\n'Don't be brash, solve my puzzle in order to pass.'\nDecipher this phrase.\n{self.encodedPhrase}"))
         else:
-            #updates image to show the door
+            # updates image to show the door
             self.currentRoom = self.r8
             self.setRoomImage()
             self.text.insert(
@@ -604,12 +605,12 @@ class Game(Frame):
             self.doorSuccess = True
         else:
             if (self.doorAttempts < 3):
-                #returns to room 1 image
+                # returns to room 1 image
                 self.currentRoom = self.r1
                 self.setRoomImage()
                 response = "\nThe Door speaks,\n'Invalid. Come back and try again. There might be a clue somewhere...'"
             else:
-                #returns to room 1 image
+                # returns to room 1 image
                 self.currentRoom = self.r1
                 self.setRoomImage()
                 response = f"\nThe Door speaks,\n'Invalid. You might wanna look for clues in {self.r3.name}'"
@@ -631,6 +632,8 @@ class Game(Frame):
         # Return back to the normal game.
         self.updateStatus(response)
 
+# destroys the window and exits the program
+
 
 def endgame():
     window.destroy()
@@ -645,9 +648,11 @@ WIDTH = 800
 HEIGHT = 600
 
 # create the window. Set title. Set x button to stop program. Set resolution to specified values.
+#
 window = Tk()
 window.title("Room Adventure")
 window.geometry(f"{WIDTH}x{HEIGHT}")
+# Set the x button on the window to close the window and game
 window.protocol("WM_DELETE_WINDOW", lambda: endgame())
 
 # create the GUI as a Tkinter canvas inside the window
