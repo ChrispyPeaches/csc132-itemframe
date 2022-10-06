@@ -13,12 +13,21 @@
 </head>
 
 <body>
-    <form id="pixel-form">
-        <div class="container-fluid pixel-grid-container">
-            <!-- JS inserts grid here -->
+    <div id="all-content-wrapper" class="row">
+        <div class="col-2" id="left-sidebar">
+
         </div>
-        <button class="btn btn-primary" type="button" onclick="onSubmitPixelGridForm()">Submit</button>
-    </form>
+        <div class="col-7" id="main-content-wrapper">
+            <form id="pixel-form">
+                <div class="container-fluid pixel-grid-container">
+                    <!-- JS inserts grid here -->
+                </div>
+            </form>
+        </div>
+        <div class="col-3" id="right-sidebar">
+            <button class="btn btn-primary" type="button" onclick="onSubmitPixelGridForm()">Submit</button>
+        </div>
+    </div>
     <!-- JS Imports -->
     <script src="https://code.jquery.com/jquery-3.6.1.min.js"
         integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>

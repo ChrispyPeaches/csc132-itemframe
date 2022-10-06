@@ -1,9 +1,22 @@
 body {
     width: 100vw;
+    height: 100vh;
 }
+
+#main-content-wrapper {}
+
+#left-sidebar {}
+
+#right-sidebar {}
 
 .pixel-grid-container {
     max-width: 100%;
+    max-height: 100%;
+}
+
+#pixel-form {
+    max-width: 100%;
+
 }
 
 .pixel-grid-container .pixel-row {
@@ -18,5 +31,6 @@ body {
 }
 
 .pixel-grid-container .pixel-row .pixel-box .pixel-input {
-    width: 100%;
+    width: 90%;
+    height: 100%;
 }
