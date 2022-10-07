@@ -1,3 +1,5 @@
+API_URL = "http://127.0.0.1:5000"
+
 $(document).ready(function () {
     // Generates grid for assigning colors to pixels
     $(".pixel-grid-container").html(
@@ -44,7 +46,7 @@ function onSubmitPixelGridForm() {
     // Sends the request and gets a response without refreshing the web page.
     $.ajax({
         type: "POST",
-        url: 'index.html',
+        url: API_URL,
         data: getFormData($("#pixel-form")),
         dataType: "json",
         contentType: 'application/json;charset=UTF-8',
