@@ -1,4 +1,6 @@
 API_URL = "http://127.0.0.1:5000"
+PIXEL_GRID_HEIGHT = 2
+PIXEL_GRID_LENGTH = 2
 
 $(document).ready(function () {
     // Generates grid for assigning colors to pixels
@@ -7,14 +9,14 @@ $(document).ready(function () {
         ${(function genHTMLString() {
             htmlString = ``;
             // Loops over and creates each row of pixels
-            for (let i = 0; i < 16; i++) {
+            for (let i = 0; i < PIXEL_GRID_HEIGHT; i++) {
                 htmlString += `<div class="row pixel-row" id="matrix-${i}-row">`;
                 // Loops over and creates each pixel in each row
-                for (let j = 0; j < 16; j++) {
+                for (let j = 0; j < PIXEL_GRID_LENGTH; j++) {
                     htmlString +=
                         `
                     <div class="col pixel-box pixel">
-                        <input class="pixel-input" id="color-input-${i}-${j}" name="color-input-${i}-${j}" type="color" value="#923a3a">
+                        <input class="pixel-input" id="pix[${PIXEL_GRID_LENGTH*i + j}]" name="pix[${PIXEL_GRID_LENGTH*i + j}]" type="color" value="#923a3a">
                     </div>
                     `;
                 };
@@ -40,14 +42,13 @@ function onSubmitPixelGridForm() {
         $.map(unindexed_array, function (n, i) {
             indexed_array[n['name']] = n['value'];
         });
-
-        return indexed_array;
+        return JSON.parse(JSON.stringify(indexed_array))
     }
     // Sends the request and gets a response without refreshing the web page.
     $.ajax({
         type: "POST",
         url: API_URL,
-        data: getFormData($("#pixel-form")),
+        data: JSON.stringify( $('#pixel-form').serializeArray()),
         dataType: "json",
         contentType: 'application/json;charset=UTF-8',
         // On a successful request, do the following.
