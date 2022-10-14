@@ -8,6 +8,11 @@ main {
     padding-right: 25vw;
 }
 
+body>footer {
+    position: fixed;
+    right: 0;
+}
+
 /* Sidebar */
 .sidebar {
     position: fixed;
@@ -43,8 +48,35 @@ main {
 #right-sidebar {
     box-shadow: 0 2px 5px 0 rgb(0 0 0 / 10%), 0 2px 10px 0 rgb(0 0 0 / 10%);
     background-color: #efefef;
-
     right: 0;
+    width: 25vw;
+    display: flex;
+    flex-direction: column;
+}
+
+#preset-list-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 0 10px;
+    overflow: scroll;
+    max-height: 100%;
+}
+
+.preset-container {
+    margin-top: 5%;
+    margin-bottom: 5%;
+}
+
+.preset-container img {
+    width: 100%;
+}
+
+.preset-container p {
+    margin-top: 10px;
+    margin-bottom: 0px;
+    color: rgb(0 0 0 / 70%);
+    text-align: center;
 }
 
 #all-content-wrapper {}
@@ -52,9 +84,9 @@ main {
 #pixel-form-container {
     background-image: url("resources/itemframe.jpg");
     height: 100vh;
+    padding-top: 3vh;
+    max-height: 100vh;
 }
-
-
 
 #pixel-grid-container {
     display: flex;

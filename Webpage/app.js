@@ -32,18 +32,74 @@ $(document).ready(function () {
             return htmlString;
         })()}
     `
-
     );
 });
+
+function getPresetList() {
+    $.ajax({
+        type: "GET",
+        url: API_URL + API_PRESET_LIST,
+        data: JSON.stringify("None"),
+        dataType: "json",
+        contentType: 'application/json;charset=UTF-8',
+        // On a successful request, do the following.
+        success: function (response) {
+            console.log(response)
+        },
+        // On a failed request, do the following.
+        error: function (xhr, resp, text) {
+            console.log(text)
+        }
+    });
+}
+
+function loadPresetList(response) {
+    $.each(data, function (index, keyValPair) {
+        $(`input[name="${keyValPair.name}"]`).val(keyValPair.value);
+
+
+
+
+
+
+        $("#pixel-grid-container").html(
+            `
+            ${(function genHTMLString() {
+                htmlString = ``;
+                // Loops over and creates each row of pixels
+                for (let i = 0; i < PIXEL_GRID_HEIGHT; i++) {
+                    htmlString += `<div class="row pixel-row" id="matrix-${i}-row">`;
+                    // Loops over and creates each pixel in each row
+                    for (let j = 0; j < PIXEL_GRID_LENGTH; j++) {
+                        htmlString +=
+                            `
+                        <div class="ratio ratio-1x1  col pixel-box pixel">
+                            <input class="pixel-input" id="pix[${PIXEL_GRID_LENGTH * i + j}]" name="pix[${PIXEL_GRID_LENGTH * i + j}]" type="color" value="#923a3a">
+                        </div>
+                        `;
+                    };
+                    htmlString +=
+                        `
+                    </div>
+                    `;
+                };
+                return htmlString;
+            })()}
+        `
+        );
+
+
+    });
+}
 
 // Get function called when a preset is selected and calls
 // loadPreset() so the values of that preset can be attached
 // to the pixel inputs.
-function getPreset() {
+function getPreset(ele) {
     $.ajax({
         type: "GET",
         url: API_URL + API_PRESET,
-        data: JSON.stringify("sword"),
+        data: JSON.stringify(ele.querySelector('p').textContent),
         dataType: "json",
         contentType: 'application/json;charset=UTF-8',
         // On a successful request, do the following.
@@ -64,8 +120,8 @@ function getPreset() {
 // The paramenter "data" is essentially a JSON string detailing
 // the name of the input element intended to be changed and the
 // value that it is intended to be changed to.
-function loadPreset(data) {
-    $.each(data, function (index, keyValPair) {
+function loadPreset(response) {
+    $.each(response, function (index, keyValPair) {
         $(`input[name="${keyValPair.name}"]`).val(keyValPair.value);
     });
 }
