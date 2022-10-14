@@ -1,10 +1,14 @@
 API_URL = "http://127.0.0.1:5000"
-PIXEL_GRID_HEIGHT = 2
-PIXEL_GRID_LENGTH = 2
+API_PRESET = "/preset"
+API_PRESET_LIST = "/presetlist"
+PIXEL_GRID_HEIGHT = 16
+PIXEL_GRID_LENGTH = 16
+
+testGlobalValue = ""
 
 $(document).ready(function () {
     // Generates grid for assigning colors to pixels
-    $(".pixel-grid-container").html(
+    $("#pixel-grid-container").html(
         `
         ${(function genHTMLString() {
             htmlString = ``;
@@ -15,8 +19,8 @@ $(document).ready(function () {
                 for (let j = 0; j < PIXEL_GRID_LENGTH; j++) {
                     htmlString +=
                         `
-                    <div class="col pixel-box pixel">
-                        <input class="pixel-input" id="pix[${PIXEL_GRID_LENGTH*i + j}]" name="pix[${PIXEL_GRID_LENGTH*i + j}]" type="color" value="#923a3a">
+                    <div class="ratio ratio-1x1  col pixel-box pixel">
+                        <input class="pixel-input" id="pix[${PIXEL_GRID_LENGTH * i + j}]" name="pix[${PIXEL_GRID_LENGTH * i + j}]" type="color" value="#923a3a">
                     </div>
                     `;
                 };
@@ -31,6 +35,40 @@ $(document).ready(function () {
 
     );
 });
+
+// Get function called when a preset is selected and calls
+// loadPreset() so the values of that preset can be attached
+// to the pixel inputs.
+function getPreset() {
+    $.ajax({
+        type: "GET",
+        url: API_URL + API_PRESET,
+        data: JSON.stringify("sword"),
+        dataType: "json",
+        contentType: 'application/json;charset=UTF-8',
+        // On a successful request, do the following.
+        success: function (response) {
+            console.log(response)
+            testGlobalValue = response
+            loadPreset(response)
+        },
+        // On a failed request, do the following.
+        error: function (xhr, resp, text) {
+            console.log(text)
+        }
+    });
+}
+
+// Given a set of values, it'll change the pixel inputs to the
+// specified values.
+// The paramenter "data" is essentially a JSON string detailing
+// the name of the input element intended to be changed and the
+// value that it is intended to be changed to.
+function loadPreset(data) {
+    $.each(data, function (index, keyValPair) {
+        $(`input[name="${keyValPair.name}"]`).val(keyValPair.value);
+    });
+}
 
 // Submits the HTTP Request of the pixels' colors to the given url in a JSON format
 function onSubmitPixelGridForm() {
@@ -48,7 +86,7 @@ function onSubmitPixelGridForm() {
     $.ajax({
         type: "POST",
         url: API_URL,
-        data: JSON.stringify( $('#pixel-form').serializeArray()),
+        data: JSON.stringify($('#pixel-form').serializeArray()),
         dataType: "json",
         contentType: 'application/json;charset=UTF-8',
         // On a successful request, do the following.
