@@ -1,3 +1,4 @@
+from cgitb import text
 import json
 from flask import Flask, jsonify, request
 
@@ -6,27 +7,41 @@ from flask import Flask, jsonify, request
 
 app = Flask(__name__)
 
-testPixValues = []
+testPreset = {
+    "imgFile": "presets/presetImgs/itemframe.png",
+    "pixels":
+    [
+        {
+            f"name": f"pix[0]",
+            f"value": "#FFFFFF"
+        },
+        {
+            f"name": f"pix[1]",
+            f"value": f"#FFFFFF"
+        },
+        {
+            f"name": f"pix[2]",
+            f"value": f"#FFFFFF"
+        }
+    ]
+}
 
 testPresetList = [
     {
-        f"name": f"pix[0]",
-        f"value": "#FFFFFF"
+        f"presetName": f"itemframe"
     },
     {
-        f"name": f"pix[0]",
-        f"value": "#FFFFFF"
+        f"presetName": f"sword"
     },
     {
-        f"name": f"pix[2]",
-        f"value": "#FFFFFF"
+        f"presetName": f"pickaxe"
     }
 ]
 
 
 def createTestPixValues():
     for i in range(256):
-        testPixValues.append(
+        testPreset["pixels"].append(
             {
                 f"name": f"pix[{i}]",
                 f"value": "#FFFFFF"
@@ -57,7 +72,7 @@ def maxtrixInput():
 def getPresetsList():
     # Check filesystem for presets
     # return list of all presets
-    pass
+    return jsonify(testPresetList)
 
 
 @app.route("/preset", methods=['GET'])
@@ -66,4 +81,4 @@ def getPreset():
     # convert it if needed
     # send back the matrix values
     # For testing
-    return jsonify(testPixValues)
+    return jsonify(testPreset["pixels"])

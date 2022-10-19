@@ -8,32 +8,33 @@ testGlobalValue = ""
 
 $(document).ready(function () {
     // Generates grid for assigning colors to pixels
-    $("#pixel-grid-container").html(
-        `
-        ${(function genHTMLString() {
-            htmlString = ``;
-            // Loops over and creates each row of pixels
-            for (let i = 0; i < PIXEL_GRID_HEIGHT; i++) {
-                htmlString += `<div class="row pixel-row" id="matrix-${i}-row">`;
-                // Loops over and creates each pixel in each row
-                for (let j = 0; j < PIXEL_GRID_LENGTH; j++) {
-                    htmlString +=
-                        `
-                    <div class="ratio ratio-1x1  col pixel-box pixel">
-                        <input class="pixel-input" id="pix[${PIXEL_GRID_LENGTH * i + j}]" name="pix[${PIXEL_GRID_LENGTH * i + j}]" type="color" value="#923a3a">
-                    </div>
-                    `;
-                };
-                htmlString +=
-                    `
-                </div>
-                `;
-            };
-            return htmlString;
-        })()}
-    `
-    );
+    $("#pixel-grid-container").html(generatePixelGrid);
+    // Gets and displays list of presets from 
+    getPresetList();
+
 });
+
+function generatePixelGrid() {
+    htmlString = ``;
+    // Loops over and creates each row of pixels
+    for (let i = 0; i < PIXEL_GRID_HEIGHT; i++) {
+        htmlString += `<div class="row pixel-row" id="matrix-${i}-row">`;
+        // Loops over and creates each pixel in each row
+        for (let j = 0; j < PIXEL_GRID_LENGTH; j++) {
+            htmlString +=
+                `
+            <div class="ratio ratio-1x1  col pixel-box pixel">
+                <input class="pixel-input" id="pix[${PIXEL_GRID_LENGTH * i + j}]" name="pix[${PIXEL_GRID_LENGTH * i + j}]" type="color" value="#923a3a">
+            </div>
+            `;
+        };
+        htmlString +=
+            `
+        </div>
+        `;
+    };
+    return htmlString;
+}
 
 function getPresetList() {
     $.ajax({
@@ -44,7 +45,8 @@ function getPresetList() {
         contentType: 'application/json;charset=UTF-8',
         // On a successful request, do the following.
         success: function (response) {
-            console.log(response)
+            console.log(response);
+            loadPresetList(response);
         },
         // On a failed request, do the following.
         error: function (xhr, resp, text) {
@@ -54,42 +56,17 @@ function getPresetList() {
 }
 
 function loadPresetList(response) {
-    $.each(data, function (index, keyValPair) {
-        $(`input[name="${keyValPair.name}"]`).val(keyValPair.value);
-
-
-
-
-
-
-        $("#pixel-grid-container").html(
+    htmlString = ``;
+    $.each(response, function (index, keyValPair) {
+        htmlString +=
             `
-            ${(function genHTMLString() {
-                htmlString = ``;
-                // Loops over and creates each row of pixels
-                for (let i = 0; i < PIXEL_GRID_HEIGHT; i++) {
-                    htmlString += `<div class="row pixel-row" id="matrix-${i}-row">`;
-                    // Loops over and creates each pixel in each row
-                    for (let j = 0; j < PIXEL_GRID_LENGTH; j++) {
-                        htmlString +=
-                            `
-                        <div class="ratio ratio-1x1  col pixel-box pixel">
-                            <input class="pixel-input" id="pix[${PIXEL_GRID_LENGTH * i + j}]" name="pix[${PIXEL_GRID_LENGTH * i + j}]" type="color" value="#923a3a">
-                        </div>
-                        `;
-                    };
-                    htmlString +=
-                        `
-                    </div>
-                    `;
-                };
-                return htmlString;
-            })()}
-        `
-        );
-
-
+            <a class="preset-container list-group-item-action py-2 ripple" aria-current="true" id="preset-${keyValPair.presetName}" onclick="getPreset(this)">
+                <img src="resources/itemframe.jpg" />
+                <p>${keyValPair.presetName}</p>
+            </a>
+            `;
     });
+    $('#preset-list-container').html(htmlString);
 }
 
 // Get function called when a preset is selected and calls
