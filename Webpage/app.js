@@ -99,7 +99,7 @@ function getPreset(ele) {
     $.ajax({
         type: "GET",
         url: API_URL + API_PRESET,
-        data: JSON.stringify(ele.querySelector('p').textContent),
+        data: JSON.stringify("sword"),
         dataType: "json",
         contentType: 'application/json;charset=UTF-8',
         // On a successful request, do the following.

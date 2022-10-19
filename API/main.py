@@ -8,13 +8,30 @@ app = Flask(__name__)
 
 testPixValues = []
 
+testPresetList = [
+    {
+        f"name": f"pix[0]",
+        f"value": "#FFFFFF"
+    },
+    {
+        f"name": f"pix[0]",
+        f"value": "#FFFFFF"
+    },
+    {
+        f"name": f"pix[2]",
+        f"value": "#FFFFFF"
+    }
+]
+
 
 def createTestPixValues():
     for i in range(256):
-        testPixValues.append({
-            f"name": f"pix[{i}]",
-            f"value": "#FFFFFF"
-        })
+        testPixValues.append(
+            {
+                f"name": f"pix[{i}]",
+                f"value": "#FFFFFF"
+            }
+        )
 
 
 postData = []
@@ -48,6 +65,5 @@ def getPreset():
     # Find preset file
     # convert it if needed
     # send back the matrix values
-
     # For testing
     return jsonify(testPixValues)
