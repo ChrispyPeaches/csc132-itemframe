@@ -96,10 +96,12 @@ function loadPresetList(response) {
 // loadPreset() so the values of that preset can be attached
 // to the pixel inputs.
 function getPreset(ele) {
+    dataString = `[{"presetName" : "${$(ele).children('p').text()}"}]`;
+
     $.ajax({
         type: "GET",
         url: API_URL + API_PRESET,
-        data: JSON.stringify("sword"),
+        data: dataString,
         dataType: "json",
         contentType: 'application/json;charset=UTF-8',
         // On a successful request, do the following.
