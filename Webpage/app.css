@@ -1,36 +1,117 @@
 body {
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
 }
 
-#main-content-wrapper {}
+main {
+    padding-left: 20vw;
+    padding-right: 25vw;
+}
 
-#left-sidebar {}
+body>footer {
+    position: fixed;
+    right: 0;
+}
 
-#right-sidebar {}
+/* Sidebar */
+.sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    padding: 58px 0 0;
+    /* Height of navbar */
+    box-shadow: 0 2px 5px 0 rgb(0 0 0 / 5%), 0 2px 10px 0 rgb(0 0 0 / 5%);
+    z-index: 600;
+}
 
-.pixel-grid-container {
-    max-width: 100%;
+.sidebar .active {
+    border-radius: 5px;
+    box-shadow: 0 2px 5px 0 rgb(0 0 0 / 16%), 0 2px 10px 0 rgb(0 0 0 / 12%);
+}
+
+.sidebar-sticky {
+    position: relative;
+    top: 0;
+    height: calc(100vh - 48px);
+    padding-top: 0.5rem;
+    overflow-x: hidden;
+    overflow-y: auto;
+    /* Scrollable contents if viewport is shorter than content. */
+}
+
+#left-sidebar {
+    box-shadow: 0 2px 5px 0 rgb(0 0 0 / 10%), 0 2px 10px 0 rgb(0 0 0 / 10%);
+    background-color: #efefef;
+    width: 20vw;
+    left: 0;
+}
+
+#right-sidebar {
+    box-shadow: 0 2px 5px 0 rgb(0 0 0 / 10%), 0 2px 10px 0 rgb(0 0 0 / 10%);
+    background-color: #efefef;
+    right: 0;
+    width: 25vw;
+    display: flex;
+    flex-direction: column;
+}
+
+#preset-list-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 0 10px;
+    overflow: scroll;
     max-height: 100%;
 }
 
-#pixel-form {
-    max-width: 100%;
-
+.preset-container {
+    margin-top: 5%;
+    margin-bottom: 5%;
 }
 
-.pixel-grid-container .pixel-row {
+.preset-container img {
+    width: 100%;
+}
+
+.preset-container p {
+    margin-top: 10px;
+    margin-bottom: 0px;
+    color: rgb(0 0 0 / 70%);
+    text-align: center;
+}
+
+#all-content-wrapper {}
+
+#pixel-form-container {
+    background-image: url("resources/itemframe.jpg");
+    height: 100vh;
+    padding-top: 3vh;
+    max-height: 100vh;
+}
+
+#pixel-grid-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding-bottom: 20px;
+}
+
+#pixel-form {
+    height: 100%;
+}
+
+#pixel-grid-container .pixel-row {
     flex: auto;
     flex-wrap: nowrap;
     padding: 0;
 }
 
-.pixel-grid-container .pixel-row .pixel-box {
+#pixel-grid-container .pixel-row .pixel-box {
     width: fit-content;
     padding: 0;
 }
 
-.pixel-grid-container .pixel-row .pixel-box .pixel-input {
-    width: 90%;
+#pixel-grid-container .pixel-row .pixel-box .pixel-input {
+    width: 100%;
     height: 100%;
 }
