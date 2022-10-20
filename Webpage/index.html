@@ -9,31 +9,47 @@
     <!-- CSS Imports -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+    <!-- MDB -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/5.0.0/mdb.min.css" rel="stylesheet" />
+    <!-- Custom CSS file -->
     <link rel="stylesheet" href="app.css">
 </head>
 
 <body>
-    <div id="all-content-wrapper" class="row">
-        <div class="col-2" id="left-sidebar">
-
-        </div>
-        <div class="col-7" id="main-content-wrapper">
-            <form id="pixel-form">
-                <div class="container-fluid pixel-grid-container">
-                    <!-- JS inserts grid here -->
+    <nav class="sidebar" id="left-sidebar">
+        <button class="btn btn-primary" type="button" onclick="submitPixelValues()">Submit</button>
+    </nav>
+    <main id="main-content-wrapper">
+        <div class="container bg-image" id="pixel-form-container">
+            <form id="pixel-form" class="container ">
+                <div class="" id="pixel-grid-container">
+                    <!-- JS Inserts grid here -->
                 </div>
             </form>
         </div>
-        <div class="col-3" id="right-sidebar">
-            <button class="btn btn-primary" type="button" onclick="onSubmitPixelGridForm()">Submit</button>
+    </main>
+    <nav class="sidebar" id="right-sidebar">
+        <div class="col-2">
         </div>
-    </div>
+        <div class="col-10" id="preset-list-container">
+            <!-- JS Inserts Preset List here -->
+        </div>
+    </nav>
     <!-- JS Imports -->
+    <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.1.min.js"
         integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+    <!-- Bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
         crossorigin="anonymous"></script>
+    <!-- MDB -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/5.0.0/mdb.min.js"></script>
+    <!-- Custom JS file -->
     <script src="app.js"></script>
 </body>
 
