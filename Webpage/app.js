@@ -4,16 +4,16 @@ API_PRESET_LIST = "/presetlist"
 PIXEL_GRID_HEIGHT = 16
 PIXEL_GRID_LENGTH = 16
 
-testGlobalValue = ""
-
+// Run when page loads
 $(document).ready(function () {
     // Generates grid for assigning colors to pixels
-    $("#pixel-grid-container").html(generatePixelGrid);
+    $("#pixel-grid-container").html(generatePixelGrid());
     // Gets and displays list of presets from 
     getPresetList();
 
 });
 
+// Generates grid of pixels with dimensions: PIXEL_GRID_HEIGHT x PIXEL_GRID_LENGTH
 function generatePixelGrid() {
     htmlString = ``;
     // Loops over and creates each row of pixels
@@ -36,6 +36,7 @@ function generatePixelGrid() {
     return htmlString;
 }
 
+// Get's list of presets from API
 function getPresetList() {
     $.ajax({
         type: "GET",
@@ -45,7 +46,6 @@ function getPresetList() {
         contentType: 'application/json;charset=UTF-8',
         // On a successful request, do the following.
         success: function (response) {
-            console.log(response);
             loadPresetList(response);
         },
         // On a failed request, do the following.
@@ -55,12 +55,13 @@ function getPresetList() {
     });
 }
 
+// Insert presets from API into preset list sidebar
 function loadPresetList(response) {
     htmlString = ``;
     $.each(response, function (index, keyValPair) {
         htmlString +=
             `
-            <a class="preset-container list-group-item-action py-2 ripple" aria-current="true" id="preset-${keyValPair.presetName}" onclick="getPreset(this)">
+            <a class="preset-container list-group-item-action py-2 ripple" aria-current="true" id="preset-${keyValPair.presetName}" onmousedown="getPreset(this)">
                 <img src="resources/itemframe.jpg" />
                 <p>${keyValPair.presetName}</p>
             </a>
@@ -74,7 +75,6 @@ function loadPresetList(response) {
 // to the pixel inputs.
 function getPreset(ele) {
     dataString = `[{"presetName" : "${$(ele).children('p').text()}"}]`;
-
     $.ajax({
         type: "GET",
         url: API_URL + API_PRESET,
@@ -84,7 +84,6 @@ function getPreset(ele) {
         // On a successful request, do the following.
         success: function (response) {
             console.log(response)
-            testGlobalValue = response
             loadPreset(response)
         },
         // On a failed request, do the following.
@@ -105,18 +104,8 @@ function loadPreset(response) {
     });
 }
 
-// Submits the HTTP Request of the pixels' colors to the given url in a JSON format
-function onSubmitPixelGridForm() {
-    // Converts the form data to be sent to API. Accepts an element from the page (expects a form element and gathers all of the inputs, then converts them to JSON)
-    function getFormData($form) {
-        var unindexed_array = $form.serializeArray();
-        var indexed_array = {};
-
-        $.map(unindexed_array, function (n, i) {
-            indexed_array[n['name']] = n['value'];
-        });
-        return JSON.parse(JSON.stringify(indexed_array))
-    }
+// Submits the HTTP Request of the pixels' colors to API
+function submitPixelValues() {
     // Sends the request and gets a response without refreshing the web page.
     $.ajax({
         type: "POST",

@@ -40,7 +40,8 @@ body>footer {
 }
 
 #left-sidebar {
-    background-color: blue;
+    box-shadow: 0 2px 5px 0 rgb(0 0 0 / 10%), 0 2px 10px 0 rgb(0 0 0 / 10%);
+    background-color: #efefef;
     width: 20vw;
     left: 0;
 }
