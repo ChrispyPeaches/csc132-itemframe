@@ -21,7 +21,8 @@
 
 <body>
     <nav class="sidebar" id="left-sidebar">
-        <button class="btn btn-primary" type="button" onclick="submitPixelValues()">Submit</button>
+        <button class="btn btn-primary" type="button" onclick="submitPixelValues()">Send to Matrix</button>
+        <button class="btn btn-primary" type="button" onclick="createOrEditPreset()">Create Preset</button>
     </nav>
     <main id="main-content-wrapper">
         <div class="container bg-image" id="pixel-form-container">
@@ -33,12 +34,43 @@
         </div>
     </main>
     <nav class="sidebar" id="right-sidebar">
-        <div class="col-2">
+        <div class="col-2" id="filter-input-group">
+            <div class="input-group">
+                <input id="filter-sidebar-input" type="text" class="form-control" placeholder="Search Presets"
+                    aria-label="Search Presets" aria-describedby="basic-addon2">
+                <span class="input-group-text" id="basic-addon2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-search" viewBox="0 0 16 16">
+                        <path
+                            d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z">
+                        </path>
+                    </svg>
+                </span>
+            </div>
         </div>
         <div class="col-10" id="preset-list-container">
             <!-- JS Inserts Preset List here -->
         </div>
     </nav>
+
+
+    <div class="modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Modal title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Modal body text goes here.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- JS Imports -->
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.1.min.js"
@@ -49,6 +81,8 @@
         crossorigin="anonymous"></script>
     <!-- MDB -->
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/5.0.0/mdb.min.js"></script>
+    <!-- Lodash -->
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
     <!-- Custom JS file -->
     <script src="app.js"></script>
 </body>

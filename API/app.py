@@ -1,4 +1,3 @@
-from cgitb import text
 import json
 from flask import Flask, jsonify, request, json, send_file
 from flask.wrappers import Response
@@ -62,8 +61,8 @@ createTestPixValues()
 
 
 @app.route("/", methods=['POST'])
-def maxtrixInput():
-    postData.append(request.get_json())
+def sendPixelsToMatrix():
+    pixelData = request.get_json()
     # Just adds data sent to the list. 204 code response
     return "", 204
 

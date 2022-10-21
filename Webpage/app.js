@@ -5,14 +5,47 @@ API_GET_PRESET_IMG = "/presetimg"
 PIXEL_GRID_HEIGHT = 16
 PIXEL_GRID_LENGTH = 16
 
+// Initialize the preset list for search filtering
+presets = [];
+// Grab the search filtering input
+input = document.getElementById('filter-sidebar-input');
+
 // Run when page loads
 $(document).ready(function () {
     // Generates grid for assigning colors to pixels
     $("#pixel-grid-container").html(generatePixelGrid());
     // Gets and displays list of presets from 
     getPresetList();
+    // Assign the search input to filter the preset list
+    // when something is typed inside.
+    input.addEventListener('keyup', filterUsers)
 
 });
+
+// Filters the preset list in the sidebar based on the search bar input in real-time
+function filterUsers(event) {
+    keyword = input.value.toLowerCase();
+    presetsShown = presets.filter(function (preset) {
+        preset = preset.toLowerCase();
+        return preset.indexOf(keyword) > -1;
+    });
+    presetsHidden = _.reject(presets, function (preset) {
+        preset = preset.toLowerCase();
+        return preset.indexOf(keyword) > -1;
+    });
+    console.log(presetsHidden)
+    renderFilteredLists(presetsShown, presetsHidden);
+}
+
+// Show or hide presets given in list parameters
+function renderFilteredLists(presetsShown, presetsHidden) {
+    presetsShown.forEach(function (i) {
+        $(`#preset-${i}`).css('visibility', 'visible');
+    });
+    presetsHidden.forEach(function (i) {
+        $(`#preset-${i}`).css('visibility', 'hidden');
+    });
+}
 
 // Generates grid of pixels with dimensions: PIXEL_GRID_HEIGHT x PIXEL_GRID_LENGTH
 function generatePixelGrid() {
@@ -61,6 +94,7 @@ function getPresetList() {
 function loadPresetList(response) {
     htmlString = ``;
     $.each(response, function (index, keyValPair) {
+        presets.push(keyValPair.presetName)
         htmlString +=
             `
             <a class="preset-container list-group-item-action py-2 ripple" aria-current="true" id="preset-${keyValPair.presetName}" onmousedown="getPreset(this)">
@@ -93,6 +127,8 @@ function getPreset(ele) {
             console.log(text)
         }
     });
+
+
 }
 
 // Given a set of values, it'll change the pixel inputs to the

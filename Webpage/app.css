@@ -13,12 +13,22 @@ body>footer {
     right: 0;
 }
 
+.input-group {
+    flex-wrap: nowrap;
+    width: fit-content;
+}
+
+#filter-input-group {
+    width: 90%;
+    margin: 0 auto;
+}
+
 /* Sidebar */
 .sidebar {
     position: fixed;
     top: 0;
     bottom: 0;
-    padding: 58px 0 0;
+    padding: 15px 0 0;
     /* Height of navbar */
     box-shadow: 0 2px 5px 0 rgb(0 0 0 / 5%), 0 2px 10px 0 rgb(0 0 0 / 5%);
     z-index: 600;
