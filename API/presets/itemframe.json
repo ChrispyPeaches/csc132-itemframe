@@ -1,0 +1,17 @@
+{
+    "imgFile": "presets/presetImgs/itemframe.jpg",
+    "pixels": [
+        {
+            "name": "pix[0]",
+            "value": "#FFFFFF"
+        },
+        {
+            "name": "pix[1]",
+            "value": "#FFFFFF"
+        },
+        {
+            "name": "pix[2]",
+            "value": "#FFFFFF"
+        }
+    ]
+}

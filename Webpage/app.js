@@ -1,6 +1,7 @@
 API_URL = "http://127.0.0.1:5000"
 API_PRESET = "/preset"
 API_PRESET_LIST = "/presetlist"
+API_GET_PRESET_IMG = "/presetimg"
 PIXEL_GRID_HEIGHT = 16
 PIXEL_GRID_LENGTH = 16
 
@@ -56,13 +57,14 @@ function getPresetList() {
 }
 
 // Insert presets from API into preset list sidebar
+// Retrieves image from API
 function loadPresetList(response) {
     htmlString = ``;
     $.each(response, function (index, keyValPair) {
         htmlString +=
             `
             <a class="preset-container list-group-item-action py-2 ripple" aria-current="true" id="preset-${keyValPair.presetName}" onmousedown="getPreset(this)">
-                <img src="resources/itemframe.jpg" />
+                <img src="${API_URL}${API_GET_PRESET_IMG}?presetName=${keyValPair.presetName}" />
                 <p>${keyValPair.presetName}</p>
             </a>
             `;
