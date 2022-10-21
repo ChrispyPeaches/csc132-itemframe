@@ -14,9 +14,21 @@ pixels.deinit()
 sleep(1)
 pixels = neopixel.NeoPixel(board.D12, 256)
 sleep(1)
-for j in range(128):
-    pixels[j] = (0, 255, 0)
-for i in range(128, 256, 1):
-    pixels[i] = (255, 0, 0)
+#converts Hex values into rgb values function
+def hex_to_rgb(value):
+    value = value.lstrip('#')
+    return list(int(value[i:i+2],16)for i in (0,2,4))
+
+#uses the functionfrom above to return the pixel and hex value of the json
+def lightupMatrix(pixelArr, hex_values):
+    i = 0
+    for pixel in pixelArr:
+        pixels[pixel] = hex_to_rgb(hex_values[i])
+        i += 1
+
+ 
+pixel = [1,2]
+hex_value = ['#ff0066','FFFFFF']
+lightupMatrix(pixel,hex_value)
 sleep(2)
 pixels.deinit()
