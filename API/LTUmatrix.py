@@ -8,7 +8,6 @@ MATRIX_PIN = board.D12
 # li = [ board.D11, board.D12, board.D13, board.D14, board.D15, board.D16, board.D17, board.D18, board.D19]
 # for i in li:
 #     print(i)
-
 pixels = neopixel.NeoPixel(board.D12, 256)
 pixels.deinit()
 sleep(1)
@@ -25,6 +24,8 @@ def lightupMatrix(pixelArr, hex_values):
     for pixel in pixelArr:
         pixels[pixel] = hex_to_rgb(hex_values[i])
         i += 1
+
+ 
 
  
 pixel = [1,2]

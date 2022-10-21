@@ -22,3 +22,4 @@ Test for Github Discord update integration
     ```
     7. Hit the "Submit" button on the website
     8. You should get a message in the terminal you started the API in saying "POST" and "204"
+    9. Go into the launch.json configurations change sudo to true in order run the rasp pi

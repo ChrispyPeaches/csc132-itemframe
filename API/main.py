@@ -1,6 +1,7 @@
 from cgitb import text
 import json
 from flask import Flask, jsonify, request
+import API.LTUmatrix as LTUmatrix
 
 # Run the API using this in the terminal:
 # flask --app {Path to repo}/csc132-itemframe/API/main run
@@ -63,7 +64,7 @@ def hello_world():
 
 @app.route("/", methods=['POST'])
 def maxtrixInput():
-    postData.append(request.get_json())
+    LTUmatrix.lightupMatrix(request.get_json())
     # Just adds data sent to the list. 204 code response
     return "", 204
 
