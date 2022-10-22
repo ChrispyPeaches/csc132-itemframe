@@ -1,6 +1,7 @@
 import json
 from flask import Flask, jsonify, request, json, send_file
 from flask.wrappers import Response
+import presetThingy
 
 # Run the API using this in the terminal:
 # flask --app {Path to repo}/csc132-itemframe/API/main run
@@ -29,17 +30,13 @@ testPreset = {
 
 testPresetList = [
     {
-        f"presetName": f"itemframe",
-        f"presetImgFile": f"presets/presetImgs/itemframe.png"
+        f"presetName": f"itemframe"
     },
     {
-        f"presetName": f"sword",
-        f"presetImgFile": f"presets/presetImgs/sword.png"
+        f"presetName": f"sword"
     },
     {
-        f"presetName": f"pickaxe",
-        f"presetImgFile": f"presets/presetImgs/pickaxe.png"
-
+        f"presetName": f"pickaxe"
     }
 ]
 
@@ -71,7 +68,8 @@ def sendPixelsToMatrix():
 def getPresetsList():
     # Check filesystem for presets
     # return list of all presets
-    return jsonify(testPresetList)
+
+    return jsonify(presetThingy.retrievePresetLists())
 
 
 @app.route("/presetimg", methods=['GET'])

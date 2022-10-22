@@ -17,30 +17,19 @@ def takeValues(name):
 
 
 def retrievePresetLists():
-    dir = 'presets/'
+    dir = os.path.dirname(__file__) + '/presets/'
     imgDir = 'presets/presetImgs/'
-    presetList = {
-        "names":
-        [
-
-        ]
-    }
+    presetList = []
 
     for dirName, _, fileNames in os.walk(dir):
         for fileName in fileNames:
             if fileName.endswith('.json'):
-                for iDirName, _, iFileNames in os.walk(imgDir):
-                    for iFileName in iFileNames:
-                        if iFileName.endswith('.png') or iFileName.endswith('.jpg'):
-                            if((os.path.splitext(fileName)[0]) == (os.path.splitext(iFileName)[0])):
-                                presetList["names"].append(
-                                    {
-                                        "presetName": "{}".format((os.path.splitext(fileName)[0])),
-                                        "presetImageFile": "presets/presetImgs/{}".format(iFileName)
-                                    }
-                                )
-    finalList = json.dumps(presetList)
-    return finalList
+                presetList.append(
+                    {
+                        "presetName": "{}".format((os.path.splitext(fileName)[0]))
+                    }
+                )
+    return presetList
     # get names of each file in presets folder
     # send list of names back
     # have the function look directly in the presets folder

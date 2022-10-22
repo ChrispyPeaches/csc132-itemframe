@@ -80,6 +80,7 @@ function getPresetList() {
         contentType: 'application/json;charset=UTF-8',
         // On a successful request, do the following.
         success: function (response) {
+            console.log(response)
             loadPresetList(response);
         },
         // On a failed request, do the following.
