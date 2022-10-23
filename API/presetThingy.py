@@ -7,8 +7,9 @@ def takeValues(name):
     for dirName, _, fileNames in os.walk(dir):
         for fileName in fileNames:
             if fileName == '{}.json'.format(name):
-                break
-    return fileName
+                with open('{}{}'.format(dir, fileName)) as jfile:
+                    values = json.load(jfile)
+    return values
     # create takeValues function
     # take preset name as a parameter
     # find the corresponding json file
