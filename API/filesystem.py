@@ -3,13 +3,13 @@ import json
 
 
 def takeValues(name):
-    dir = 'presets/'
+    dir = os.path.join(os.path.dirname(__file__), 'presets')
     for dirName, _, fileNames in os.walk(dir):
         for fileName in fileNames:
             if fileName == '{}.json'.format(name):
-                with open('{}{}'.format(dir, fileName)) as jfile:
+                with open(os.path.join(dir, fileName)) as jfile:
                     values = json.load(jfile)
-    return values
+                    print(values)
     # create takeValues function
     # take preset name as a parameter
     # find the corresponding json file
@@ -38,3 +38,5 @@ def retrievePresetLists():
     # format as list of strings in json
     # name: preset name
     # imagefile: later
+
+takeValues("itemframe")
