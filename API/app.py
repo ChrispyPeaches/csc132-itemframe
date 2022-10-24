@@ -2,12 +2,14 @@ import json
 from flask import Flask, jsonify, request, json, send_file
 from flask.wrappers import Response
 import filesystem
+from flask_cors import CORS
 
 # Run the API using this in the terminal:
 # flask --app {Path to repo}/csc132-itemframe/API/main run
 
 
 app = Flask(__name__)
+CORS(app)
 
 testPreset = {
     "imgFile": "presets/presetImgs/itemframe.png",
