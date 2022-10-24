@@ -1,11 +1,15 @@
-from cgitb import text
 import json
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, json, send_file
+from flask.wrappers import Response
+import filesystem
+from flask_cors import CORS
 
 # Run the API using this in the terminal:
 # flask --app {Path to repo}/csc132-itemframe/API/main run
 
+
 app = Flask(__name__)
+CORS(app)
 
 testPreset = {
     "imgFile": "presets/presetImgs/itemframe.png",
@@ -55,15 +59,9 @@ postData = []
 createTestPixValues()
 
 
-@app.route("/", methods=['GET'])
-def hello_world():
-    # Sends the data in the list as a response
-    return jsonify(postData)
-
-
 @app.route("/", methods=['POST'])
-def maxtrixInput():
-    postData.append(request.get_json())
+def sendPixelsToMatrix():
+    pixelData = request.get_json()
     # Just adds data sent to the list. 204 code response
     return "", 204
 
@@ -72,13 +70,33 @@ def maxtrixInput():
 def getPresetsList():
     # Check filesystem for presets
     # return list of all presets
-    return jsonify(testPresetList)
+    return jsonify(filesystem.retrievePresetLists())
+
+
+@app.route("/presetimg", methods=['GET'])
+def getPresetImg():
+    # Given a preset name, read the preset's file to find its associated image,
+    # then return the image file.
+    reqArgs = request.args.to_dict()
+    try:
+        f = json.loads(
+            open(f"{app.root_path}/presets/{reqArgs['presetName']}.json", "r").read())
+
+        return send_file(f"{app.root_path}/{f['imgFile']}")
+    except:
+        return Response(status=500, mimetype="application/json")
 
 
 @app.route("/preset", methods=['GET'])
 def getPreset():
-    # Find preset file
-    # convert it if needed
-    # send back the matrix values
-    # For testing
-    return jsonify(testPreset["pixels"])
+    reqArgs = request.args.to_dict()
+    # Trust me, it works \/
+    return jsonify(filesystem.takeValues(reqArgs['presetName'])['pixels'])
+
+
+@app.route("/preset", methods=['POST'])
+def createPreset():
+    value = request.get_json()
+    # Send recieved pixel data to function that creates preset
+
+    return "", 204

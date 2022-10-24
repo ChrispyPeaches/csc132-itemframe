@@ -1,7 +1,8 @@
 # csc132-itemframe
 Test for Github Discord update integration
 
-
+#### Matrix Size
+- 16 cm x 16 cm
 ## GUI
 - Contains a (variable) 16 x 16 pixel grid with assignable color values
 #### Guide to Interact with API locally
