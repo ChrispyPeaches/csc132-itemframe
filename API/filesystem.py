@@ -9,7 +9,7 @@ def takeValues(name):
             if fileName == '{}.json'.format(name):
                 with open(os.path.join(dir, fileName)) as jfile:
                     values = json.load(jfile)
-                    print(values)
+                    return values
     # create takeValues function
     # take preset name as a parameter
     # find the corresponding json file
