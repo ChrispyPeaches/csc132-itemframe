@@ -1,8 +1,14 @@
 API_URL = "http://127.0.0.1:5000"
 API_PRESET = "/preset"
 API_PRESET_LIST = "/presetlist"
+API_GET_PRESET_IMG = "/presetimg"
 PIXEL_GRID_HEIGHT = 16
 PIXEL_GRID_LENGTH = 16
+
+// Initialize the preset list for search filtering
+presets = [];
+// Grab the search filtering input
+input = document.getElementById('filter-sidebar-input');
 
 // Run when page loads
 $(document).ready(function () {
@@ -10,8 +16,36 @@ $(document).ready(function () {
     $("#pixel-grid-container").html(generatePixelGrid());
     // Gets and displays list of presets from 
     getPresetList();
+    // Assign the search input to filter the preset list
+    // when something is typed inside.
+    input.addEventListener('keyup', filterUsers)
 
 });
+
+// Filters the preset list in the sidebar based on the search bar input in real-time
+function filterUsers(event) {
+    keyword = input.value.toLowerCase();
+    presetsShown = presets.filter(function (preset) {
+        preset = preset.toLowerCase();
+        return preset.indexOf(keyword) > -1;
+    });
+    presetsHidden = _.reject(presets, function (preset) {
+        preset = preset.toLowerCase();
+        return preset.indexOf(keyword) > -1;
+    });
+    console.log(presetsHidden)
+    renderFilteredLists(presetsShown, presetsHidden);
+}
+
+// Show or hide presets given in list parameters
+function renderFilteredLists(presetsShown, presetsHidden) {
+    presetsShown.forEach(function (i) {
+        $(`#preset-${i}`).css('visibility', 'visible');
+    });
+    presetsHidden.forEach(function (i) {
+        $(`#preset-${i}`).css('visibility', 'hidden');
+    });
+}
 
 // Generates grid of pixels with dimensions: PIXEL_GRID_HEIGHT x PIXEL_GRID_LENGTH
 function generatePixelGrid() {
@@ -56,13 +90,15 @@ function getPresetList() {
 }
 
 // Insert presets from API into preset list sidebar
+// Retrieves image from API
 function loadPresetList(response) {
     htmlString = ``;
     $.each(response, function (index, keyValPair) {
+        presets.push(keyValPair.presetName)
         htmlString +=
             `
             <a class="preset-container list-group-item-action py-2 ripple" aria-current="true" id="preset-${keyValPair.presetName}" onmousedown="getPreset(this)">
-                <img src="resources/itemframe.jpg" />
+                <img src="${API_URL}${API_GET_PRESET_IMG}?presetName=${keyValPair.presetName}" />
                 <p>${keyValPair.presetName}</p>
             </a>
             `;
@@ -72,18 +108,16 @@ function loadPresetList(response) {
 
 // Get function called when a preset is selected and calls
 // loadPreset() so the values of that preset can be attached
-// to the pixel inputs.
+// to the pixel inputs. 
+// Sticks the name of the preset into the input field under the create/edit preset form. 
 function getPreset(ele) {
-    dataString = `[{"presetName" : "${$(ele).children('p').text()}"}]`;
+    presetName = $(ele).children('p').text();
+    $('#preset-name-input').val(presetName)
     $.ajax({
         type: "GET",
-        url: API_URL + API_PRESET,
-        data: dataString,
-        dataType: "json",
-        contentType: 'application/json;charset=UTF-8',
+        url: `${API_URL}${API_PRESET}?presetName=${presetName}`,
         // On a successful request, do the following.
         success: function (response) {
-            console.log(response)
             loadPreset(response)
         },
         // On a failed request, do the following.
@@ -91,6 +125,8 @@ function getPreset(ele) {
             console.log(text)
         }
     });
+
+
 }
 
 // Given a set of values, it'll change the pixel inputs to the
@@ -101,6 +137,30 @@ function getPreset(ele) {
 function loadPreset(response) {
     $.each(response, function (index, keyValPair) {
         $(`input[name="${keyValPair.name}"]`).val(keyValPair.value);
+    });
+}
+
+function createOrEditPreset() {
+    data =
+    {
+        presetName: `${$('#preset-name-input')}`,
+        pixels: []
+    };
+    data.pixels = $('#pixel-form').serializeArray();
+    $.ajax({
+        type: "POST",
+        url: API_URL + API_PRESET,
+        data: JSON.stringify(data),
+        dataType: "json",
+        contentType: 'application/json;charset=UTF-8',
+        // On a successful request, do the following.
+        success: function (response) {
+            console.log(response)
+        },
+        // On a failed request, do the following.
+        error: function (xhr, resp, text) {
+            console.log(text)
+        }
     });
 }
 
@@ -115,7 +175,6 @@ function submitPixelValues() {
         contentType: 'application/json;charset=UTF-8',
         // On a successful request, do the following.
         success: function (response) {
-            console.log(response)
         },
         // On a failed request, do the following.
         error: function (xhr, resp, text) {
