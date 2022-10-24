@@ -38,5 +38,3 @@ def retrievePresetLists():
     # format as list of strings in json
     # name: preset name
     # imagefile: later
-
-takeValues("itemframe")

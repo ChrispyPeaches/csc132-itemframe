@@ -143,7 +143,7 @@ function loadPreset(response) {
 function createOrEditPreset() {
     data =
     {
-        presetName: `${presetName}`,
+        presetName: `${$('#preset-name-input')}`,
         pixels: []
     };
     data.pixels = $('#pixel-form').serializeArray();
