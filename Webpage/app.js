@@ -80,7 +80,6 @@ function getPresetList() {
         contentType: 'application/json;charset=UTF-8',
         // On a successful request, do the following.
         success: function (response) {
-            console.log(response)
             loadPresetList(response);
         },
         // On a failed request, do the following.
@@ -113,14 +112,12 @@ function loadPresetList(response) {
 // Sticks the name of the preset into the input field under the create/edit preset form. 
 function getPreset(ele) {
     presetName = $(ele).children('p').text();
-    dataString = `[{"presetName" : "${presetName}"}]`;
     $('#preset-name-input').val(presetName)
     $.ajax({
         type: "GET",
         url: `${API_URL}${API_PRESET}?presetName=${presetName}`,
         // On a successful request, do the following.
         success: function (response) {
-            console.log(response)
             loadPreset(response)
         },
         // On a failed request, do the following.
@@ -144,7 +141,27 @@ function loadPreset(response) {
 }
 
 function createOrEditPreset() {
-
+    data =
+    {
+        presetName: `${presetName}`,
+        pixels: []
+    };
+    data.pixels = $('#pixel-form').serializeArray();
+    $.ajax({
+        type: "POST",
+        url: API_URL + API_PRESET,
+        data: JSON.stringify(data),
+        dataType: "json",
+        contentType: 'application/json;charset=UTF-8',
+        // On a successful request, do the following.
+        success: function (response) {
+            console.log(response)
+        },
+        // On a failed request, do the following.
+        error: function (xhr, resp, text) {
+            console.log(text)
+        }
+    });
 }
 
 // Submits the HTTP Request of the pixels' colors to API
@@ -158,7 +175,6 @@ function submitPixelValues() {
         contentType: 'application/json;charset=UTF-8',
         // On a successful request, do the following.
         success: function (response) {
-            console.log(response)
         },
         // On a failed request, do the following.
         error: function (xhr, resp, text) {

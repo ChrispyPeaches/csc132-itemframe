@@ -34,6 +34,19 @@ body>footer {
     z-index: 600;
 }
 
+#preset-edit-container .card-body {
+    padding: 0.8rem;
+}
+
+#submitPresetForm {
+    margin-top: 10px;
+    justify-self: flex-end;
+}
+
+.list-group-item-action {
+    text-align: center;
+}
+
 .sidebar .active {
     border-radius: 5px;
     box-shadow: 0 2px 5px 0 rgb(0 0 0 / 16%), 0 2px 10px 0 rgb(0 0 0 / 12%);

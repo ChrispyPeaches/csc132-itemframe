@@ -68,7 +68,6 @@ def sendPixelsToMatrix():
 def getPresetsList():
     # Check filesystem for presets
     # return list of all presets
-
     return jsonify(filesystem.retrievePresetLists())
 
 
@@ -83,20 +82,19 @@ def getPresetImg():
 
         return send_file(f"{app.root_path}/{f['imgFile']}")
     except:
-        return Response(status=400, mimetype="application/json")
+        return Response(status=500, mimetype="application/json")
 
 
 @app.route("/preset", methods=['GET'])
 def getPreset():
     reqArgs = request.args.to_dict()
-    # Find preset file
-    # convert it if needed
-    # send back the matrix values
-    # For testing
+    # Trust me, it works \/
     return jsonify(filesystem.takeValues(reqArgs['presetName'])['pixels'])
 
 
 @app.route("/preset", methods=['POST'])
 def createPreset():
+    value = request.get_json()
     # Send recieved pixel data to function that creates preset
+
     return "", 204
