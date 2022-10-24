@@ -109,15 +109,15 @@ function loadPresetList(response) {
 
 // Get function called when a preset is selected and calls
 // loadPreset() so the values of that preset can be attached
-// to the pixel inputs.
+// to the pixel inputs. 
+// Sticks the name of the preset into the input field under the create/edit preset form. 
 function getPreset(ele) {
-    dataString = `[{"presetName" : "${$(ele).children('p').text()}"}]`;
+    presetName = $(ele).children('p').text();
+    dataString = `[{"presetName" : "${presetName}"}]`;
+    $('#preset-name-input').val(presetName)
     $.ajax({
         type: "GET",
-        url: API_URL + API_PRESET,
-        data: dataString,
-        dataType: "json",
-        contentType: 'application/json;charset=UTF-8',
+        url: `${API_URL}${API_PRESET}?presetName=${presetName}`,
         // On a successful request, do the following.
         success: function (response) {
             console.log(response)
@@ -141,6 +141,10 @@ function loadPreset(response) {
     $.each(response, function (index, keyValPair) {
         $(`input[name="${keyValPair.name}"]`).val(keyValPair.value);
     });
+}
+
+function createOrEditPreset() {
+
 }
 
 // Submits the HTTP Request of the pixels' colors to API

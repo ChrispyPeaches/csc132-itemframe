@@ -1,7 +1,7 @@
 import json
 from flask import Flask, jsonify, request, json, send_file
 from flask.wrappers import Response
-import presetThingy
+import filesystem
 
 # Run the API using this in the terminal:
 # flask --app {Path to repo}/csc132-itemframe/API/main run
@@ -69,7 +69,7 @@ def getPresetsList():
     # Check filesystem for presets
     # return list of all presets
 
-    return jsonify(presetThingy.retrievePresetLists())
+    return jsonify(filesystem.retrievePresetLists())
 
 
 @app.route("/presetimg", methods=['GET'])
@@ -88,8 +88,15 @@ def getPresetImg():
 
 @app.route("/preset", methods=['GET'])
 def getPreset():
+    reqArgs = request.args.to_dict()
     # Find preset file
     # convert it if needed
     # send back the matrix values
     # For testing
-    return jsonify(testPreset["pixels"])
+    return jsonify(filesystem.takeValues(reqArgs['presetName'])['pixels'])
+
+
+@app.route("/preset", methods=['POST'])
+def createPreset():
+    # Send recieved pixel data to function that creates preset
+    return "", 204
