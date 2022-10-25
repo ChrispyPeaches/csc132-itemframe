@@ -1,4 +1,5 @@
 from time import sleep
+from unicodedata import name
 import board
 import neopixel
 import json
@@ -12,7 +13,6 @@ import sys
 #     print(i)
 
 
-pixels = neopixel.NeoPixel(board.D18, 256)
 sleep(1)
 #converts Hex values into rgb values function
 def hex_to_rgb(value):
@@ -21,12 +21,20 @@ def hex_to_rgb(value):
 
 #uses the functionfrom above to return the pixel and hex value of the json
 def lightupMatrix(data):
-    for x in data['pixels'] :
-        pixel=int(x['name'])
+    try:
+        pixels = neopixel.NeoPixel(board.D18, 256)
+    except:
+        pixels = neopixel.NeoPixel(board.D12, 256)
+    for x in data['pixels']:
+        num = ""
+        for y in x["name"]:
+            if y.isdigit():
+                num = num + y
+                pixel = int(num)
         pixels[pixel] = hex_to_rgb(x['value'])
 
  
 
-data = '{"pixels":[{"name":"1","value":"#FFFFFF"},{"name":"4","value":"#B12345"},{"name":"22","value":"#FFFFFF"},{"name":"23","value":"#FFFFFF"},{"name":"34","value":"#FFFFFF"}]}'
+data = '{"pixels":[{"name":"pix[1]","value":"#FFFFFF"},{"name":"pix[222]","value":"#FFFFFF"},{"name":"pix[122]","value":"#FFFFFF"}]}'
 Loaddata=json.loads(data)
 lightupMatrix(Loaddata)

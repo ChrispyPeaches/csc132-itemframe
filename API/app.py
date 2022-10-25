@@ -3,6 +3,7 @@ from flask import Flask, jsonify, request, json, send_file
 from flask.wrappers import Response
 import filesystem
 from flask_cors import CORS
+#import LTUmatrix
 
 # Run the API using this in the terminal:
 # flask --app {Path to repo}/csc132-itemframe/API/main run
@@ -59,11 +60,11 @@ postData = []
 createTestPixValues()
 
 
-@app.route("/", methods=['POST'])
-def maxtrixInput():
-    LTUmatrix.lightupMatrix(request.get_json())
+#@app.route("/", methods=['POST'])
+#def maxtrixInput():
+    #LTUmatrix.lightupMatrix(request.get_json())
     # Just adds data sent to the list. 204 code response
-    return "", 204
+    #return "", 204
 
 
 @app.route("/presetlist", methods=['GET'])
