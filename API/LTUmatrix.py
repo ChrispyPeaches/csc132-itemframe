@@ -25,7 +25,7 @@ def lightupMatrix(data):
         pixels = neopixel.NeoPixel(board.D18, 256)
     except:
         pixels = neopixel.NeoPixel(board.D12, 256)
-    for x in data['pixels']:
+    for x in data:
         num = ""
         for y in x["name"]:
             if y.isdigit():
@@ -35,6 +35,4 @@ def lightupMatrix(data):
 
  
 
-data = '{"pixels":[{"name":"pix[1]","value":"#FFFFFF"},{"name":"pix[222]","value":"#FFFFFF"},{"name":"pix[122]","value":"#FFFFFF"}]}'
-Loaddata=json.loads(data)
-lightupMatrix(Loaddata)
+
