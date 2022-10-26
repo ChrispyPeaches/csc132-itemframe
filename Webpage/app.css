@@ -34,6 +34,16 @@ body>footer {
     z-index: 600;
 }
 
+#preset-image-upload-label {
+    color: white;
+    padding: 0.5rem;
+    font-family: sans-serif;
+    border-radius: 0.3rem;
+    cursor: pointer;
+    margin-top: 1rem;
+    text-align: center;
+}
+
 #preset-edit-container .card-body {
     padding: 0.8rem;
 }
