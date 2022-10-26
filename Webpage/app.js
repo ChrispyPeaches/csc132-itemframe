@@ -53,15 +53,29 @@ function generatePixelGrid() {
     // Loops over and creates each row of pixels
     for (let i = 0; i < PIXEL_GRID_HEIGHT; i++) {
         htmlString += `<div class="row pixel-row" id="matrix-${i}-row">`;
-        // Loops over and creates each pixel in each row
-        for (let j = 0; j < PIXEL_GRID_LENGTH; j++) {
-            htmlString +=
-                `
+        if (i % 2 == 0) {
+            // Loops over and creates each pixel in each row
+            for (let j = PIXEL_GRID_LENGTH - 1; j >= 0; j--) {
+                htmlString +=
+                    `
             <div class="ratio ratio-1x1  col pixel-box pixel">
                 <input class="pixel-input" id="pix[${PIXEL_GRID_LENGTH * i + j}]" name="pix[${PIXEL_GRID_LENGTH * i + j}]" type="color" value="#923a3a">
             </div>
             `;
-        };
+            };
+        }
+        else {
+            // Loops over and creates each pixel in each row
+            for (let j = 0; j < PIXEL_GRID_LENGTH; j++) {
+                htmlString +=
+                    `
+            <div class="ratio ratio-1x1  col pixel-box pixel">
+                <input class="pixel-input" id="pix[${PIXEL_GRID_LENGTH * i + j}]" name="pix[${PIXEL_GRID_LENGTH * i + j}]" type="color" value="#923a3a">
+            </div>
+            `;
+            };
+        }
+
         htmlString +=
             `
         </div>
