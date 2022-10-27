@@ -29,18 +29,33 @@
             href="#preset-edit-container" role="button" aria-expanded="false" aria-controls="preset-edit-container">
             <span>Create/Edit Preset</span>
         </a>
-        <div class="collapse" id="preset-edit-container">
+        <div class="collapse left-sidebar-container" id="preset-edit-container">
             <form class="card card-body" id="create-edit-preset-form">
                 <input id="preset-name-input" name="presetName" type="text" class="form-control"
                     placeholder="Preset Name" aria-label="Preset Name Input" aria-describedby="basic-addon2">
-                <label id="preset-image-upload-label" class="btn btn-primary" for="preset-image-upload-input"
-                    aria-label="Preset Image Upload" aria-describedby="basic-addon2">
-                    Upload Image
-                </label>
-                <input id="preset-image-upload-input" name="presetImage" type="file" hidden>
-                <button id="submitPresetForm" class="btn btn-primary" aria-current="true" type="button"
+                <button id="submitPresetForm" class="btn btn-primary saveButton" aria-current="true" type="button"
                     onclick="createOrEditPreset()">
                     <span>Save</span>
+                </button>
+            </form>
+        </div>
+
+        <a class="list-group-item list-group-item-action py-2 ripple" data-bs-toggle="collapse"
+            href="#upload-image-container" role="button" aria-expanded="false" aria-controls="upload-image-container">
+            <span>Upload Image</span>
+        </a>
+        <div class="collapse left-sidebar-container" id="upload-image-container">
+            <form class="card card-body" id="upload-image-form" method="post" enctype="multipart/form-data">
+                <input id="upload-name-input" name="uploadImageName" type="text" class="form-control"
+                    placeholder="Preset Name" aria-label="Preset Name Input" aria-describedby="basic-addon2">
+                <label id="preset-image-upload-label" class="btn btn-primary" for="preset-image-upload-input"
+                    aria-label="Preset Image Upload" aria-describedby="basic-addon2">
+                    Select Image
+                </label>
+                <input id="preset-image-upload-input" name="uploadImage" type="file" accept="image/png" hidden>
+                <button id="submitUploadImageForm" class="btn btn-primary saveButton" aria-current="true" type="button"
+                    onclick="uploadImageFunc(this)">
+                    <span>Upload</span>
                 </button>
             </form>
         </div>
