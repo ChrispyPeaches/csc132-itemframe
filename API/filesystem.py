@@ -38,3 +38,26 @@ def retrievePresetLists():
     # format as list of strings in json
     # name: preset name
     # imagefile: later
+
+
+def createPreset(name, list):
+
+    newPreset = {
+        "name": "{}".format(name),
+        "pixels": []
+        }
+
+    newPreset["pixels"].append(
+        {
+            "name": "pix[{}]".format(name),
+            "value": "{}".format(list)
+        }
+    )
+    p = open('presets/{}.json'.format(name), "w")
+    p.write(json.dumps(newPreset))
+    p.close()
+
+    # parse the json to get the name and pixel values
+    # make the file with the name
+    # insert in a dummy image file path
+    # insert the pixel value list into the file

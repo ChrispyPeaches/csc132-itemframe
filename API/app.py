@@ -98,5 +98,9 @@ def getPreset():
 def createPreset():
     value = request.get_json()
     # Send recieved pixel data to function that creates preset
-
-    return "", 204
+    filesystem.createPreset(request.get_json())
+    return "", 200
+    # given a preset name and list of pixels in json
+    # make a file with the filename being the preset name if the file doesn't already exist
+    # if the file already exists, overwrite the data
+    # in the file match the preset format in itemframe.json (need image file path and pixels)
