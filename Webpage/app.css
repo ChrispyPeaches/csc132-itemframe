@@ -40,15 +40,15 @@ body>footer {
     font-family: sans-serif;
     border-radius: 0.3rem;
     cursor: pointer;
-    margin-top: 1rem;
+    margin-top: 10px;
     text-align: center;
 }
 
-#preset-edit-container .card-body {
+.left-sidebar-container .card-body {
     padding: 0.8rem;
 }
 
-#submitPresetForm {
+.saveButton {
     margin-top: 10px;
     justify-self: flex-end;
 }
