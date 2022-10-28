@@ -4,6 +4,10 @@ import numpy as np
 from PIL import Image as im
 
 
+presetsDir = os.path.dirname(__file__) + '/presets/'
+presetImgsDir = presetsDir + '/presetImgs/'
+
+
 def takeValues(name):
     dir = os.path.join(os.path.dirname(__file__), 'presets')
     for dirName, _, fileNames in os.walk(dir):
@@ -20,11 +24,8 @@ def takeValues(name):
 
 
 def retrievePresetLists():
-    dir = os.path.dirname(__file__) + '/presets/'
-    imgDir = 'presets/presetImgs/'
     presetList = []
-
-    for dirName, _, fileNames in os.walk(dir):
+    for dirName, _, fileNames in os.walk(presetsDir):
         for fileName in fileNames:
             if fileName.endswith('.json'):
                 presetList.append(
@@ -45,7 +46,7 @@ def retrievePresetLists():
 def createPreset(values):
     newPreset = {
         "name": "{}".format(values['presetName']),
-        "pixels": "{}".format(values['pixels'])
+        "pixels": []
     }
     p = open('presets/{}.json'.format(newPreset["name"]), "w")
     p.write(json.dumps(newPreset))
@@ -54,7 +55,7 @@ def createPreset(values):
     array = np.arange(0, 256, 1, np.uint8)
     array = np.reshape(array, (16, 16))
     data = im.fromarray(array)
-    data.save('presets\presetImgs\gfg_dummy_pic.png')
+    data.save(presetImgsDir + 'gfg_dummy_pic.png')
 
     # parse the json to get the name and pixel values
     # make the file with the name
