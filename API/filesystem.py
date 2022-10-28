@@ -1,5 +1,7 @@
 import os
 import json
+import numpy as np
+from PIL import Image as im
 
 
 def takeValues(name):
@@ -40,22 +42,19 @@ def retrievePresetLists():
     # imagefile: later
 
 
-def createPreset(name, list):
-
+def createPreset(values):
     newPreset = {
-        "name": "{}".format(name),
-        "pixels": []
-        }
-
-    newPreset["pixels"].append(
-        {
-            "name": "pix[{}]".format(name),
-            "value": "{}".format(list)
-        }
-    )
-    p = open('presets/{}.json'.format(name), "w")
+        "name": "{}".format(values['presetName']),
+        "pixels": "{}".format(values['pixels'])
+    }
+    p = open('presets/{}.json'.format(newPreset["name"]), "w")
     p.write(json.dumps(newPreset))
     p.close()
+
+    array = np.arange(0, 256, 1, np.uint8)
+    array = np.reshape(array, (16, 16))
+    data = im.fromarray(array)
+    data.save('presets\presetImgs\gfg_dummy_pic.png')
 
     # parse the json to get the name and pixel values
     # make the file with the name
