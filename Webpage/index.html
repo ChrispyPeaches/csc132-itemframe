@@ -25,6 +25,10 @@
             onclick="submitPixelValues()">
             <span>Send to Matrix</span>
         </button>
+        <button class="list-group-item list-group-item-action py-2 ripple" aria-current="true" type="button"
+            onclick="clearPixelGrid()">
+            <span>Clear Pixel Grid</span>
+        </button>
         <a class="list-group-item list-group-item-action py-2 ripple" data-bs-toggle="collapse"
             href="#preset-edit-container" role="button" aria-expanded="false" aria-controls="preset-edit-container">
             <span>Create/Edit Preset</span>
@@ -33,6 +37,11 @@
             <form class="card card-body" id="create-edit-preset-form">
                 <input id="preset-name-input" name="presetName" type="text" class="form-control"
                     placeholder="Preset Name" aria-label="Preset Name Input" aria-describedby="basic-addon2">
+                <label id="preset-image-upload-label" class="btn btn-primary" for="preset-image-upload-input"
+                    aria-label="Preset Image Upload" aria-describedby="basic-addon2">
+                    Upload Image
+                </label>
+                <input id="preset-image-upload-input" name="presetImage" type="file" hidden>
                 <button id="submitPresetForm" class="btn btn-primary" aria-current="true" type="button"
                     onclick="createOrEditPreset()">
                     <span>Save</span>

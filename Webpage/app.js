@@ -59,7 +59,7 @@ function generatePixelGrid() {
                 htmlString +=
                     `
             <div class="ratio ratio-1x1  col pixel-box pixel">
-                <input class="pixel-input" id="pix[${PIXEL_GRID_LENGTH * i + j}]" name="pix[${PIXEL_GRID_LENGTH * i + j}]" type="color" value="#923a3a">
+                <input class="pixel-input" id="pix[${PIXEL_GRID_LENGTH * i + j}]" name="pix[${PIXEL_GRID_LENGTH * i + j}]" type="color" value="#000000">
             </div>
             `;
             };
@@ -70,7 +70,7 @@ function generatePixelGrid() {
                 htmlString +=
                     `
             <div class="ratio ratio-1x1  col pixel-box pixel">
-                <input class="pixel-input" id="pix[${PIXEL_GRID_LENGTH * i + j}]" name="pix[${PIXEL_GRID_LENGTH * i + j}]" type="color" value="#923a3a">
+                <input class="pixel-input" id="pix[${PIXEL_GRID_LENGTH * i + j}]" name="pix[${PIXEL_GRID_LENGTH * i + j}]" type="color" value="#000000">
             </div>
             `;
             };
@@ -194,5 +194,11 @@ function submitPixelValues() {
         error: function (xhr, resp, text) {
             console.log(text)
         }
+    });
+}
+
+function clearPixelGrid() {
+    $("#pixel-form input").each(function (index) {
+        $(this).val("#000000");
     });
 }
