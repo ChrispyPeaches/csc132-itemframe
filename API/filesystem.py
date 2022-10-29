@@ -56,10 +56,10 @@ def retrievePresetLists():
 
 def createPreset(values):
     newPreset = {
-        "name": "{}".format(values['presetName']),
+        "imgFile": "presets/presetImgs/{}.png".format(values['presetName']),
         "pixels": values['pixels']
     }
-    p = open(presetsDir + '{}.json'.format(newPreset["name"]), "w")
+    p = open(presetsDir + '{}.json'.format(values['presetName']), "w")
     p.write(json.dumps(newPreset))
     p.close()
 
