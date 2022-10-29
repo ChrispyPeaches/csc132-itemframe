@@ -68,7 +68,7 @@ def createPreset(values):
     # int(len(values['pixels']) ** (1/2))
     for i in range(16):
         for j in range(16):
-            colors[i,j] = (hex_to_rgb(values['pixels'][i + j]['value']))
+            colors[i,j] = (hex_to_rgb(values['pixels'][16 * i + j]['value']))
     #colors = np.array(colors, dt)
     #colors.reshape((16,16,3))
     print(colors)
