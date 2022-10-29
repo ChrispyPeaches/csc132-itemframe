@@ -71,11 +71,7 @@ def createPreset(values):
             colors[i,j] = (hex_to_rgb(values['pixels'][16 * i + j]['value']))
     #colors = np.array(colors, dt)
     #colors.reshape((16,16,3))
-    print(colors)
     image = im.fromarray(colors, "RGB")
-    for i in range(16):
-        for j in range(16):
-            print(image.getpixel((i, j)))
     image.save(presetImgsDir + '{}.png'.format(values['presetName']), 'PNG')
 
     #array = im.fromarray(data)
