@@ -12,7 +12,7 @@ def hex_to_rgb(value):
     rgbList = []
     for i in (0, 2, 4):
         rgbList.append(int(value[i:i + 2], 16))
-    return tuple(rgbList)
+    return np.array(rgbList)
 
 
 presetsDir = os.path.dirname(__file__) + '/presets/'
@@ -63,19 +63,20 @@ def createPreset(values):
     p.write(json.dumps(newPreset))
     p.close()
 
-    colors = np.empty([16, 16], dtype=list)
+    colors = np.empty((16, 16,3), dtype=np.uint8)
 
     # int(len(values['pixels']) ** (1/2))
     for i in range(16):
         for j in range(16):
-            colors[i, j] = hex_to_rgb(values['pixels'][i + j]['value'])
+            colors[i,j] = (hex_to_rgb(values['pixels'][i + j]['value']))
+    #colors = np.array(colors, dt)
+    #colors.reshape((16,16,3))
     print(colors)
-
     image = im.fromarray(colors, "RGB")
     for i in range(16):
         for j in range(16):
             print(image.getpixel((i, j)))
-    image.save(presetImgsDir + '{}.png'.format(values['presetName']))
+    image.save(presetImgsDir + '{}.png'.format(values['presetName']), 'PNG')
 
     #array = im.fromarray(data)
     # print(data)
