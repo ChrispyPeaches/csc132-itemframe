@@ -19,6 +19,12 @@ def storeLast(data):
     a = json.dump(data , file , indent = 2)
     return (a)
 
+@app.before_first_request
+def startupPixels():
+    file = open("uyg.json")
+    x = json.load(file)
+    print(x)
+    #LTUmatrix.lightupMatrix(x)
 
 @app.route("/", methods=['POST'])
 def maxtrixInput():
@@ -87,5 +93,4 @@ def createPreset():
     a = request.get_json()
     
     # Send recieved pixel data to function that creates preset
-
-    return "", 204
+    return "", 204, print(a)
