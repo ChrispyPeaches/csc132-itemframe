@@ -1,4 +1,5 @@
 import json
+from operator import and_
 from flask import Flask, jsonify, request, json, send_file
 from flask.wrappers import Response
 import filesystem
@@ -26,7 +27,7 @@ def maxtrixInput():
         # If the program successfully lights up the LED matrix with the
         # pixel data, return a success response, if unsuccessful, return
         # a internal server error response.
-        LTUmatrix.lightupMatrix(request.get_json()) and storeLast(request.get_json())
+        LTUmatrix.lightupMatrix(request.get_json()) or storeLast(request.get_json())
         return "", 204
     except:
         # If for any reason the program fails, return an internal
