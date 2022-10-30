@@ -1,5 +1,6 @@
 import os
 import json
+from PIL import Image
 
 
 def takeValues(name):
@@ -38,3 +39,23 @@ def retrievePresetLists():
     # format as list of strings in json
     # name: preset name
     # imagefile: later
+def createPreset(values):
+    print(values)
+
+def rgb_to_hex(rgb):
+    return '#%02x%02x%02x' % rgb
+
+
+def createDict(image):
+    raw_image = Image.open(image)
+    raw_image = raw_image.convert('RGB')
+    pix_val = list(raw_image.getdata())
+    pixels = []
+    for index, val in enumerate(pix_val):
+        t = {
+            f"name": f"pix[{index}]",
+            f"value" : f"{rgb_to_hex((val))}"
+        }
+        pixels.append(t)
+        jsonPix = json.dumps(pixels)
+    return(jsonPix)

@@ -81,6 +81,7 @@ def getPreset():
 
 @app.route("/preset", methods=['POST'])
 def createPreset():
-    value = request.get_json()
+    a = request.get_json()
+    
     # Send recieved pixel data to function that creates preset
-    return "", 204
+    return "", 204, print(a)
