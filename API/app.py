@@ -13,6 +13,11 @@ app = Flask(__name__)
 # Enable CORS security for flask app
 CORS(app)
 
+def storeLast(data):
+    file = open("config.json","w")
+    a = json.dump(data , file , indent = 2)
+    return (a)
+
 
 @app.route("/", methods=['POST'])
 def maxtrixInput():
@@ -21,11 +26,8 @@ def maxtrixInput():
         # If the program successfully lights up the LED matrix with the
         # pixel data, return a success response, if unsuccessful, return
         # a internal server error response.
-        if (LTUmatrix.lightupMatrix(request.get_json())):
-            return "", 204
-
-        else:
-            return "", 500
+        LTUmatrix.lightupMatrix(request.get_json()) and storeLast(request.get_json())
+        return "", 204
     except:
         # If for any reason the program fails, return an internal
         # server error response.
