@@ -1,2 +1,9 @@
 
 *.pyc
+.idea/workspace.xml
+.idea/vcs.xml
+.idea/modules.xml
+.idea/misc.xml
+.idea/inspectionProfiles/profiles_settings.xml
+.idea/csc132-itemframe.iml
+.idea/.name

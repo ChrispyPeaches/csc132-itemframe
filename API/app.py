@@ -87,4 +87,5 @@ def createPreset():
     a = request.get_json()
     
     # Send recieved pixel data to function that creates preset
-    return "", 204, print(a)
+
+    return "", 204

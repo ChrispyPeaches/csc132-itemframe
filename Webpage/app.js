@@ -1,7 +1,7 @@
 API_URL = "http://127.0.0.1:5000"
 API_PRESET = "/preset"
 API_PRESET_LIST = "/presetlist"
-API_GET_PRESET_IMG = "/presetimg"
+API_PRESET_IMG = "/presetimg"
 PIXEL_GRID_HEIGHT = 16
 PIXEL_GRID_LENGTH = 16
 
@@ -112,7 +112,7 @@ function loadPresetList(response) {
         htmlString +=
             `
             <a class="preset-container list-group-item-action py-2 ripple" aria-current="true" id="preset-${keyValPair.presetName}" onmousedown="getPreset(this)">
-                <img src="${API_URL}${API_GET_PRESET_IMG}?presetName=${keyValPair.presetName}" />
+                <img src="${API_URL}${API_PRESET_IMG}?presetName=${keyValPair.presetName}" />
                 <p>${keyValPair.presetName}</p>
             </a>
             `;
@@ -155,11 +155,16 @@ function loadPreset(response) {
 }
 
 function createOrEditPreset() {
+    if ($('#preset-name-input').val() == "") {
+        alert("Please fill in a preset name.")
+        return;
+    }
     data =
     {
-        presetName: `${$('#preset-name-input')}`,
+        presetName: `${$('#preset-name-input').val()}`,
         pixels: []
     };
+
     data.pixels = $('#pixel-form').serializeArray();
     $.ajax({
         type: "POST",
@@ -197,8 +202,28 @@ function submitPixelValues() {
     });
 }
 
-function clearPixelGrid() {
-    $("#pixel-form input").each(function (index) {
-        $(this).val("#000000");
+function uploadImageFunc(ele) {
+    if ($('#upload-name-input').val() == "" || $('#preset-image-upload-input').val() == '') {
+        alert("Please fill in a preset name & select an image.")
+        return;
+    }
+
+    let formData = new FormData($('#upload-image-form')[0])
+
+    $.ajax({
+        type: 'POST',
+        url: API_URL + API_PRESET_IMG,
+        data: formData,
+        contentType: false,
+        cache: false,
+        processData: false,
+        // On a successful request, do the following.
+        success: function (data) {
+            console.log('Success!');
+        },
+        // On a failed request, do the following.
+        error: function (xhr, resp, text) {
+            console.log(text)
+        }
     });
 }
