@@ -34,11 +34,21 @@ body>footer {
     z-index: 600;
 }
 
-#preset-edit-container .card-body {
+#preset-image-upload-label {
+    color: white;
+    padding: 0.5rem;
+    font-family: sans-serif;
+    border-radius: 0.3rem;
+    cursor: pointer;
+    margin-top: 10px;
+    text-align: center;
+}
+
+.left-sidebar-container .card-body {
     padding: 0.8rem;
 }
 
-#submitPresetForm {
+.saveButton {
     margin-top: 10px;
     justify-self: flex-end;
 }
