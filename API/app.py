@@ -20,16 +20,18 @@ configFile = os.path.dirname(__file__) + 'Config/'
 File = configFile + 'config.json'
 
 def storeLast(data):
-    file = open(File,"w")
+    file = open('Config/config.json',"w")
     a = json.dump(data , file , indent = 2)
     return (a)
     
-@app.before_first_request
+
 def startupPixels():
-    file = open(File,"w")
+    file = open('Config/config.json','r')
     x = json.load(file)
     LTUmatrix.lightupMatrix(x)
     file.close
+
+startupPixels()
     
 
 @app.route("/", methods=['POST'])
