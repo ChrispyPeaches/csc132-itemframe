@@ -31,11 +31,10 @@ def lightupMatrix(data):
                 pixel = int(num)
         pixels[pixel] = hex_to_rgb(x['value'])
 
-
-
 def turnOff(data):
     for x in data:
         pixels.deinit(x)
+
  
 
 
