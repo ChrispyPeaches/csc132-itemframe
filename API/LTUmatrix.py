@@ -2,8 +2,7 @@ from time import sleep
 from unicodedata import name
 import board
 import neopixel
-import json
-import sys
+
 
 
 #PLUG DIN WIRE INTO PIN M18 ON PI BREAKOUT BOARD
@@ -12,8 +11,7 @@ import sys
 # for i in li:
 #     print(i)
 
-
-sleep(1)
+pixels = neopixel.NeoPixel(board.D18, 256)
 #converts Hex values into rgb values function
 def hex_to_rgb(value):
     value = value.lstrip('#')
@@ -33,6 +31,11 @@ def lightupMatrix(data):
                 pixel = int(num)
         pixels[pixel] = hex_to_rgb(x['value'])
 
+
+
+def turnOff(data):
+    for x in data:
+        pixels.deinit(x)
  
 
 

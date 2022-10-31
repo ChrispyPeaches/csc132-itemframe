@@ -102,3 +102,8 @@ def createPreset():
     
     # Send recieved pixel data to function that creates preset
     return "", 204, print(a)
+
+@app.route( methods=['POST'])
+def shutdown():
+    LTUmatrix.turnOff(request.get_json())
+    return "",204
