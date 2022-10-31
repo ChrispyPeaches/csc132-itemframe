@@ -204,7 +204,7 @@ function submitPixelValues() {
 
 function uploadImageFunc(ele) {
     if ($('#upload-name-input').val() == "" || $('#preset-image-upload-input').val() == '') {
-        alert("Please fill in a preset name & select an image.")
+        alert("Please fill in a preset name & select a 16x16 PNG file.")
         return;
     }
 
@@ -225,5 +225,11 @@ function uploadImageFunc(ele) {
         error: function (xhr, resp, text) {
             console.log(text)
         }
+    });
+}
+
+function clearPixelGrid() {
+    $("#pixel-form input").each(function (index) {
+        $(this).val("#000000");
     });
 }

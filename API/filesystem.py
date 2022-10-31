@@ -3,8 +3,8 @@ import json
 import numpy as np
 from PIL import Image as im
 
-presetsDir = os.path.dirname(__file__) + '/presets/'
-presetImgsDir = presetsDir + '/presetImgs/'
+presetsDir = os.path.join(os.path.dirname(__file__), "presets/")
+presetImgsDir = os.path.join(presetsDir, "presetImgs/")
 
 
 def hex_to_rgb(value):
@@ -13,11 +13,6 @@ def hex_to_rgb(value):
     for i in (0, 2, 4):
         rgbList.append(int(value[i:i + 2], 16))
     return np.array(rgbList)
-
-
-presetsDir = os.path.dirname(__file__) + '/presets/'
-presetImgsDir = presetsDir + '/presetImgs/'
-
 
 def takeValues(name):
     dir = os.path.join(os.path.dirname(__file__), 'presets')
@@ -74,10 +69,10 @@ def createDict(image):
 
 def createPreset(values):
     newPreset = {
-        "imgFile": presetImgsDir + "{}.png".format(values['presetName']),
+        "imgFile": presetImgsDir + "{}.png".format(values['presetName'].replace(' ', '_')),
         "pixels": values['pixels']
     }
-    p = open(presetsDir + '{}.json'.format(values['presetName']), "w")
+    p = open(presetsDir + '{}.json'.format(values['presetName'].replace(' ', '_')), "w")
     p.write(json.dumps(newPreset))
     p.close()
 
@@ -94,7 +89,7 @@ def createPreset(values):
     for i in range(16):
         for j in range(16):
             print(image.getpixel((i, j)))
-    image.save(presetImgsDir + '{}.png'.format(values['presetName']), 'PNG')
+    image.save(presetImgsDir + '{}.png'.format(values['presetName'].replace(' ', '_')), 'PNG')
 
     #array = im.fromarray(data)
     # print(data)

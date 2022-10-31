@@ -42,7 +42,7 @@ def maxtrixInput():
         # pixel data, return a success response, if unsuccessful, return
         # a internal server error response.
         LTUmatrix.lightupMatrix(request.get_json()) or storeLast(request.get_json())
-        return "", 204
+        return "", 200
     except:
         # If for any reason the program fails, return an internal
         # server error response.
@@ -72,7 +72,7 @@ def getPresetImg():
         f = json.loads(
             open(f"{app.root_path}/presets/{reqArgs['presetName']}.json", "r").read())
         # Retrieve the image file path from preset file and send back the file it referenced
-        return send_file(f"{app.root_path}/{f['imgFile']}")
+        return send_file(f['imgFile'])
     except:
         # If for any reason the program fails, return an internal
         # server error response.
@@ -117,7 +117,7 @@ def uploadImage():
     # if the file already exists, overwrite the data
     # in the file match the preset format in itemframe.json (need image file path and pixels)
 
-@app.route( methods=['POST'])
+@app.route("/quit", methods=['POST'])
 def shutdown():
     LTUmatrix.turnOff(request.get_json())
     return "",204
