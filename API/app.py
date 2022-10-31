@@ -1,3 +1,4 @@
+from distutils.command.config import config
 import json
 from operator import and_
 from flask import Flask, jsonify, request, json, send_file
@@ -5,6 +6,7 @@ from flask.wrappers import Response
 import filesystem
 from flask_cors import CORS
 import LTUmatrix
+import os
 
 # Run the API using this in the terminal:
 # flask --app {Path to repo}/csc132-itemframe/API/main run
@@ -14,17 +16,21 @@ app = Flask(__name__)
 # Enable CORS security for flask app
 CORS(app)
 
+configFile = os.path.dirname(__file__) + 'Config/'
+File = configFile + 'config.json'
+
 def storeLast(data):
-    file = open("config.json","w")
+    file = open(File,"w")
     a = json.dump(data , file , indent = 2)
     return (a)
-
+    
 @app.before_first_request
 def startupPixels():
-    file = open("uyg.json")
+    file = open(File,"w")
     x = json.load(file)
-    print(x)
-    #LTUmatrix.lightupMatrix(x)
+    LTUmatrix.lightupMatrix(x)
+    file.close
+    
 
 @app.route("/", methods=['POST'])
 def maxtrixInput():
