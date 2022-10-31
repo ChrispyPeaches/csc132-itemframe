@@ -98,10 +98,24 @@ def getPreset():
 
 @app.route("/preset", methods=['POST'])
 def createPreset():
-    a = request.get_json()
-    
     # Send recieved pixel data to function that creates preset
-    return "", 204, print(a)
+    filesystem.createPreset(request.get_json())
+    return "", 200
+    # given a preset name and list of pixels in json
+    # make a file with the filename being the preset name if the file doesn't already exist
+    # if the file already exists, overwrite the data
+    # in the file match the preset format in itemframe.json (need image file path and pixels)
+
+@app.route("/presetimg", methods=['POST'])
+def uploadImage():
+    file = request.files.get('uploadImage')
+    presetName = request.form.get('uploadImageName')
+    # Send recieved pixel data to function that creates preset
+    return "", 200
+    # given a preset name and list of pixels in json
+    # make a file with the filename being the preset name if the file doesn't already exist
+    # if the file already exists, overwrite the data
+    # in the file match the preset format in itemframe.json (need image file path and pixels)
 
 @app.route( methods=['POST'])
 def shutdown():

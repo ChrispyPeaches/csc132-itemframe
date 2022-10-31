@@ -53,10 +53,28 @@ def retrievePresetLists():
     # name: preset name
     # imagefile: later
 
+def rgb_to_hex(rgb):
+    return '#%02x%02x%02x' % rgb
+
+
+def createDict(image):
+    raw_image = im.open(image)
+    raw_image = raw_image.convert('RGB')
+    pix_val = list(raw_image.getdata())
+    pixels = []
+    for index, val in enumerate(pix_val):
+        t = {
+            f"name": f"pix[{index}]",
+            f"value" : f"{rgb_to_hex((val))}"
+        }
+        pixels.append(t)
+        jsonPix = json.dumps(pixels)
+    return(jsonPix)
+
 
 def createPreset(values):
     newPreset = {
-        "imgFile": "presets/presetImgs/{}.png".format(values['presetName']),
+        "imgFile": presetImgsDir + "{}.png".format(values['presetName']),
         "pixels": values['pixels']
     }
     p = open(presetsDir + '{}.json'.format(values['presetName']), "w")
