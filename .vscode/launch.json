@@ -11,7 +11,7 @@
             "program": "${file}",
             "console": "integratedTerminal",
             "justMyCode": true,
-            "sudo": true
+            "sudo":false
         },
         {
             "name": "Python: Flask",
@@ -29,7 +29,7 @@
             ],
             "jinja": true,
             "justMyCode": true,
-            "sudo": true
+            "sudo": false
         }
     ]
 }
