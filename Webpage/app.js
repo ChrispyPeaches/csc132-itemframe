@@ -53,15 +53,29 @@ function generatePixelGrid() {
     // Loops over and creates each row of pixels
     for (let i = 0; i < PIXEL_GRID_HEIGHT; i++) {
         htmlString += `<div class="row pixel-row" id="matrix-${i}-row">`;
-        // Loops over and creates each pixel in each row
-        for (let j = 0; j < PIXEL_GRID_LENGTH; j++) {
-            htmlString +=
-                `
+        if (i % 2 == 0) {
+            // Loops over and creates each pixel in each row
+            for (let j = PIXEL_GRID_LENGTH - 1; j >= 0; j--) {
+                htmlString +=
+                    `
             <div class="ratio ratio-1x1  col pixel-box pixel">
-                <input class="pixel-input" id="pix[${PIXEL_GRID_LENGTH * i + j}]" name="pix[${PIXEL_GRID_LENGTH * i + j}]" type="color" value="#923a3a">
+                <input class="pixel-input" id="pix[${PIXEL_GRID_LENGTH * i + j}]" name="pix[${PIXEL_GRID_LENGTH * i + j}]" type="color" value="#000000">
             </div>
             `;
-        };
+            };
+        }
+        else {
+            // Loops over and creates each pixel in each row
+            for (let j = 0; j < PIXEL_GRID_LENGTH; j++) {
+                htmlString +=
+                    `
+            <div class="ratio ratio-1x1  col pixel-box pixel">
+                <input class="pixel-input" id="pix[${PIXEL_GRID_LENGTH * i + j}]" name="pix[${PIXEL_GRID_LENGTH * i + j}]" type="color" value="#000000">
+            </div>
+            `;
+            };
+        }
+
         htmlString +=
             `
         </div>
@@ -190,7 +204,7 @@ function submitPixelValues() {
 
 function uploadImageFunc(ele) {
     if ($('#upload-name-input').val() == "" || $('#preset-image-upload-input').val() == '') {
-        alert("Please fill in a preset name & select an image.")
+        alert("Please fill in a preset name & select a 16x16 PNG file.")
         return;
     }
 
@@ -211,5 +225,11 @@ function uploadImageFunc(ele) {
         error: function (xhr, resp, text) {
             console.log(text)
         }
+    });
+}
+
+function clearPixelGrid() {
+    $("#pixel-form input").each(function (index) {
+        $(this).val("#000000");
     });
 }
