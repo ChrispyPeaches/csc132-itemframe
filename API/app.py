@@ -100,6 +100,7 @@ def getPreset():
 def createPreset():
     # Send recieved pixel data to function that creates preset
     filesystem.createPreset(request.get_json())
+    filesystem.presetImg(request.get_json())
     return "", 200
     # given a preset name and list of pixels in json
     # make a file with the filename being the preset name if the file doesn't already exist
@@ -110,6 +111,13 @@ def createPreset():
 def uploadImage():
     file = request.files.get('uploadImage')
     presetName = request.form.get('uploadImageName')
+
+    conFile, nConFile = filesystem.createDict(presetName, file)
+    lConFile = json.loads(conFile)
+    lConFile2 = json.loads(nConFile)
+
+    filesystem.createPreset(lConFile)
+    filesystem.uploadedPresetImg(lConFile2)
     # Send recieved pixel data to function that creates preset
     return "", 200
     # given a preset name and list of pixels in json
