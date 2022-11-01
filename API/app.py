@@ -1,6 +1,4 @@
-from distutils.command.config import config
 import json
-from operator import and_
 from flask import Flask, jsonify, request, json, send_file
 from flask.wrappers import Response
 import filesystem
@@ -16,17 +14,16 @@ app = Flask(__name__)
 # Enable CORS security for flask app
 CORS(app)
 
-configFile = os.path.dirname(__file__) + 'Config/'
-File = configFile + 'config.json'
+configFile = os.path.dirname(__file__) + '/config.json'
 
 def storeLast(data):
-    file = open('Config/config.json',"w")
+    file = open('config.json',"w")
     a = json.dump(data , file , indent = 2)
     return (a)
     
 
 def startupPixels():
-    file = open('Config/config.json','r')
+    file = open(configFile,'r')
     x = json.load(file)
     LTUmatrix.lightupMatrix(x)
     file.close
