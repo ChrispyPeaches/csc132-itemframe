@@ -42,4 +42,12 @@
 
 ### API
 ##### Matrix Program
+-The Matrix convert uses the adafruit neopixel library specifically for python
+-In order to install the library you must use the command in the terminal 'pip3 install neopixel' and 'pip3 install pillow'
+-Afterwards import the board module to initialize the pins on the bread-board
+-The global variable is created based on the pin of the data wire and the number of led on the matrix
+-There is a hex converter converter function takes RGB values and changes them to hex
+- Then the main function runs through a for loop of all the pix values sent through json request parse the string to find the digit
+-and turns the RGB to hex and and sends it to the matrix light it up
+-The LTU Matrix converter is the program the api sends all of the presets and json request through to light up the board
 ##### Filesystem Program
