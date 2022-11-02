@@ -109,9 +109,15 @@ def createPreset(values):
         "imgFile": presetImgsDir + "{}.png".format(values['presetName'].replace(' ', '_')),
         "pixels": values['pixels']
     }
-    p = open(presetsDir + '{}.json'.format(values['presetName'].replace(' ', '_')), "w")
-    p.write(json.dumps(newPreset))
-    p.close()
+    if(os.path.exists(presetsDir)):
+        p = open(presetsDir + '{}.json'.format(values['presetName'].replace(' ', '_')), "w")
+        p.write(json.dumps(newPreset))
+        p.close()
+    else:
+        os.makedirs(presetsDir)
+        p = open(presetsDir + '{}.json'.format(values['presetName'].replace(' ', '_')), "w")
+        p.write(json.dumps(newPreset))
+        p.close()
 
 
     # parse the json to get the name and pixel values
@@ -131,7 +137,11 @@ def presetImg(values):
     # for i in range(16):
     # for j in range(16):
     # print(image.getpixel((i, j)))
-    image.save(presetImgsDir + '{}.png'.format(values['presetName'].replace(' ', '_')), 'PNG')
+    if(os.path.exists(presetImgsDir)):
+        image.save(presetImgsDir + '{}.png'.format(values['presetName'].replace(' ', '_')), 'PNG')
+    else:
+        os.makedirs(presetImgsDir)
+        image.save(presetImgsDir + '{}.png'.format(values['presetName'].replace(' ', '_')), 'PNG')
 
 
 def uploadedPresetImg(values):
@@ -146,7 +156,11 @@ def uploadedPresetImg(values):
     # for i in range(16):
     # for j in range(16):
     # print(image.getpixel((i, j)))
-    image.save(presetImgsDir + '{}.png'.format(values['presetName'].replace(' ', '_')), 'PNG')
+    if (os.path.exists(presetImgsDir)):
+        image.save(presetImgsDir + '{}.png'.format(values['presetName'].replace(' ', '_')), 'PNG')
+    else:
+        os.makedirs(presetImgsDir)
+        image.save(presetImgsDir + '{}.png'.format(values['presetName'].replace(' ', '_')), 'PNG')
 
     # parse the json to get the name and pixel values
     # make the file with the name
