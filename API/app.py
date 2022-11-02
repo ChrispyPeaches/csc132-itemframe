@@ -1,6 +1,4 @@
-from distutils.command.config import config
 import json
-from operator import and_
 from flask import Flask, jsonify, request, json, send_file
 from flask.wrappers import Response
 import filesystem
@@ -16,17 +14,16 @@ app = Flask(__name__)
 # Enable CORS security for flask app
 CORS(app)
 
-configFile = os.path.dirname(__file__) + 'Config/'
-File = configFile + 'config.json'
+configFile = os.path.dirname(__file__) + '/config.json'
 
 def storeLast(data):
-    file = open('Config/config.json',"w")
+    file = open('config.json',"w")
     a = json.dump(data , file , indent = 2)
     return (a)
     
 
 def startupPixels():
-    file = open('Config/config.json','r')
+    file = open(configFile,'r')
     x = json.load(file)
     LTUmatrix.lightupMatrix(x)
     file.close
@@ -100,6 +97,7 @@ def getPreset():
 def createPreset():
     # Send recieved pixel data to function that creates preset
     filesystem.createPreset(request.get_json())
+    filesystem.presetImg(request.get_json())
     return "", 200
     # given a preset name and list of pixels in json
     # make a file with the filename being the preset name if the file doesn't already exist
@@ -110,6 +108,13 @@ def createPreset():
 def uploadImage():
     file = request.files.get('uploadImage')
     presetName = request.form.get('uploadImageName')
+
+    conFile, nConFile = filesystem.createDict(presetName, file)
+    lConFile = json.loads(conFile)
+    lConFile2 = json.loads(nConFile)
+
+    filesystem.createPreset(lConFile)
+    filesystem.uploadedPresetImg(lConFile2)
     # Send recieved pixel data to function that creates preset
     return "", 200
     # given a preset name and list of pixels in json
