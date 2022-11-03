@@ -56,15 +56,26 @@
         }
     4. Go into [The webpage's JS file](Webpage/app.js) and change the variable "API_URL" to your RPi's either local or port forwarded address including the port if necessary.
       i. Note: The localhost port is already filled in.
-    5. Copy the file path to your [index.html](Webpage/index.html) in the repository & paste it into the URL bar in the browser just opened. The should show you the webpage with the pixel grid.
+    5. Copy the file path to your [index.html](Webpage/index.html) in the repository & paste it into the URL bar in the browser just opened.
 
 ## About the App
 ### Website
 - Contains a by default (variable size) 16 x 16 pixel grid with assignable color values
-- A left sidebar containing a buttons:
-  - One sends the grid of pixels to the item frame
-  - The other opens a form to upload the grid of pixels as a preset with the given name
-
+- Left Sidebar:
+  - The "Send to Matrix" button uploads the pixels currently in the grid to the 
+  - The "Clear Pixel Grid" button sets all of the pixels in the grid to black
+  - The "Create/Edit Preset" button:
+    - If you have a preset selected or you enter the name of an existing preset, it will update that preset to the values currently in the pixel grid
+    - If you enter a preset name that doesn't exist, it will create a new preset with the values currently in the pixel grid
+  - The "Upload Image" button:
+    - Creates a preset with the preset name specified out of the uploaded image.
+    - Must be a PNG
+    - Must be a 16x16 image.
+- The pixel grid consists of 256 individually addressable pixels using the color picker HTML tag
+- Right Sidebar:
+  - Retrieves a list of selectable presets from the API host
+  - If selected, the preset's pixel values will populate the pixel grid with its values
+  - Search bar at the top filters through the list of presets
 ### API
 ##### Matrix Program
 -The Matrix convert uses the adafruit neopixel library specifically for python
