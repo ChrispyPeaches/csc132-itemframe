@@ -17,7 +17,7 @@ CORS(app)
 configFile = os.path.dirname(__file__) + '/config.json'
 
 def storeLast(data):
-    file = open('config.json',"w")
+    file = open(configFile,"w")
     a = json.dump(data , file , indent = 2)
     return (a)
     
