@@ -65,11 +65,11 @@ def getPresetImg():
     # Retrieve the name of the preset from the request
     reqArgs = request.args.to_dict()
     try:
+        h = os.path.join(filesystem.presetsDir, f"{reqArgs['presetName']}.json")
         # Open the JSON file of the requested image's assocaited preset
-        f = json.loads(
-            open(f"{app.root_path}/presets/{reqArgs['presetName']}.json", "r").read())
+        f = json.loads(open(os.path.join(filesystem.presetsDir, f"{reqArgs['presetName']}.json"), "r").read())
         # Retrieve the image file path from preset file and send back the file it referenced
-        return send_file(f['imgFile'])
+        return send_file(os.path.join(filesystem.presetImgsDir, f"{f['imgFile']}"))
     except:
         # If for any reason the program fails, return an internal
         # server error response.

@@ -106,7 +106,7 @@ def createDict(name, image):
 
 def createPreset(values):
     newPreset = {
-        "imgFile": presetImgsDir + "{}.png".format(values['presetName'].replace(' ', '_')),
+        "imgFile": "{}.png".format(values['presetName'].replace(' ', '_')),
         "pixels": values['pixels']
     }
     if(os.path.exists(presetsDir)):

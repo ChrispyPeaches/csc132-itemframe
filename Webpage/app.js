@@ -106,13 +106,16 @@ function getPresetList() {
 // Insert presets from API into preset list sidebar
 // Retrieves image from API
 function loadPresetList(response) {
+    let dateTime = new Date();
+    let currDate = dateTime.getDate() + dateTime.getUTCMilliseconds() + dateTime.getTime();
     htmlString = ``;
     $.each(response, function (index, keyValPair) {
+
         presets.push(keyValPair.presetName)
         htmlString +=
             `
             <a class="preset-container list-group-item-action py-2 ripple" aria-current="true" id="preset-${keyValPair.presetName}" onmousedown="getPreset(this)">
-                <img src="${API_URL}${API_PRESET_IMG}?presetName=${keyValPair.presetName}" />
+                <img src="${API_URL}${API_PRESET_IMG}?presetName=${keyValPair.presetName}&cacheNoMore=${currDate}" />
                 <p>${keyValPair.presetName}</p>
             </a>
             `;
