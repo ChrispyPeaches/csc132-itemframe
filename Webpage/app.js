@@ -41,9 +41,11 @@ function filterUsers(event) {
 function renderFilteredLists(presetsShown, presetsHidden) {
     presetsShown.forEach(function (i) {
         $(`#preset-${i}`).css('visibility', 'visible');
+        $(`#preset-${i}`).css('content-visibility', 'visible');
     });
     presetsHidden.forEach(function (i) {
         $(`#preset-${i}`).css('visibility', 'hidden');
+        $(`#preset-${i}`).css('content-visibility', 'hidden');
     });
 }
 
@@ -106,13 +108,16 @@ function getPresetList() {
 // Insert presets from API into preset list sidebar
 // Retrieves image from API
 function loadPresetList(response) {
+    let dateTime = new Date();
+    let currDate = dateTime.getDate() + dateTime.getUTCMilliseconds() + dateTime.getTime();
     htmlString = ``;
     $.each(response, function (index, keyValPair) {
+
         presets.push(keyValPair.presetName)
         htmlString +=
             `
             <a class="preset-container list-group-item-action py-2 ripple" aria-current="true" id="preset-${keyValPair.presetName}" onmousedown="getPreset(this)">
-                <img src="${API_URL}${API_PRESET_IMG}?presetName=${keyValPair.presetName}" />
+                <img src="${API_URL}${API_PRESET_IMG}?presetName=${keyValPair.presetName}&cacheNoMore=${currDate}" />
                 <p>${keyValPair.presetName}</p>
             </a>
             `;
@@ -174,13 +179,14 @@ function createOrEditPreset() {
         contentType: 'application/json;charset=UTF-8',
         // On a successful request, do the following.
         success: function (response) {
-            console.log(response)
         },
         // On a failed request, do the following.
         error: function (xhr, resp, text) {
             console.log(text)
         }
     });
+
+    location.reload();
 }
 
 // Submits the HTTP Request of the pixels' colors to API
@@ -219,13 +225,13 @@ function uploadImageFunc(ele) {
         processData: false,
         // On a successful request, do the following.
         success: function (data) {
-            console.log('Success!');
         },
         // On a failed request, do the following.
         error: function (xhr, resp, text) {
             console.log(text)
         }
     });
+    location.reload();
 }
 
 function clearPixelGrid() {
