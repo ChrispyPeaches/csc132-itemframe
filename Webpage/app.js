@@ -41,9 +41,11 @@ function filterUsers(event) {
 function renderFilteredLists(presetsShown, presetsHidden) {
     presetsShown.forEach(function (i) {
         $(`#preset-${i}`).css('visibility', 'visible');
+        $(`#preset-${i}`).css('content-visibility', 'visible');
     });
     presetsHidden.forEach(function (i) {
         $(`#preset-${i}`).css('visibility', 'hidden');
+        $(`#preset-${i}`).css('content-visibility', 'hidden');
     });
 }
 
@@ -177,13 +179,14 @@ function createOrEditPreset() {
         contentType: 'application/json;charset=UTF-8',
         // On a successful request, do the following.
         success: function (response) {
-            console.log(response)
         },
         // On a failed request, do the following.
         error: function (xhr, resp, text) {
             console.log(text)
         }
     });
+
+    location.reload();
 }
 
 // Submits the HTTP Request of the pixels' colors to API
@@ -222,13 +225,13 @@ function uploadImageFunc(ele) {
         processData: false,
         // On a successful request, do the following.
         success: function (data) {
-            console.log('Success!');
         },
         // On a failed request, do the following.
         error: function (xhr, resp, text) {
             console.log(text)
         }
     });
+    location.reload();
 }
 
 function clearPixelGrid() {
