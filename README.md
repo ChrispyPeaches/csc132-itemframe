@@ -1,8 +1,27 @@
 # LED Minecraft Item Frame
-**Built on Python 3.9.12**
+
+## About the Project
+The project was created as a part of Louisiana Tech University's Living with Cyber program where, at the end of their first year, freshman computer science students work in teams to build a project over the span of a quarter (Louisiana Tech uses the quarter system rather than the semester system). At the end of the quarter, the teams compete, submitting their projects into a cyber expo competition.
+<br/>
+<br/>
+The LED Minecraft Item Frame won First Place in Louisiana Tech University's Freshman Cyber Expo
+
+### The team
+From left to right
+- Chris Perry
+- Lucas Alvarado
+- Sharantz Green
+- Cory Strickland
+
+![project-Team-pic](https://github.com/ChrispyPeaches/csc132-itemframe/assets/26045099/2e09be6d-7731-408a-adf8-664562969556)
+
+
+
 ## First Time Setup
 **Note: Setup designed for Raspberry Pi**
 ### App
+**Built on Python 3.9.12**
+
 1. [Install VSCode](https://code.visualstudio.com/download)
 2. Clone and open the repo
 3. Setup and activate a venv virtual environment to use with the repository. 
@@ -25,7 +44,7 @@
 ![Circuitry Sketch](docs/circuitry_sketch_bb.png)
 </div>
 
-## Run the app
+## Running the application
 #### Guide to interact with app locally
 - **Linux (RPi)**
     1. Assure either:
